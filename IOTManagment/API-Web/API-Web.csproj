@@ -9,6 +9,14 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NetMQ" Version="4.0.1.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="RabbitMQ.Client" />
+    <None Remove="Newtonsoft.Json" />
+    <None Remove="ZeroMQ" />
+    <None Remove="NetMQ" />
+  </ItemGroup>
 </Project>
