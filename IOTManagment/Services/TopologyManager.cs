@@ -10,15 +10,20 @@ namespace Services
     public class TopologyManager : ITopologyManager
     {
 
-        public Dictionary<IPAddress, IPAddress> IPAdresses { get; set; }
+        public Dictionary<IPAddress, INode> IPAdresses { get; set; }
         
         public TopologyManager() {
-            IPAdresses = new Dictionary<IPAddress, IPAddress>();
+            IPAdresses = new Dictionary<IPAddress, INode>();
         }
 
-        public void AddNode(IPAddress NewNode, IPAddress ParentNode)
+        public void AddNode(IPAddress nodeAdd, INode node)
         {
-           IPAdresses.Add(NewNode, ParentNode ); 
+           IPAdresses.Add(nodeAdd, node); 
+        }
+
+        public void UpdateNode(IPAddress nodeAdd, INode node) 
+        {
+            IPAdresses[nodeAdd] = node;
         }
     }
 }
