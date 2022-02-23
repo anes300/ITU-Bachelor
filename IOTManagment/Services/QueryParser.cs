@@ -12,19 +12,30 @@ namespace Services
     {
         SelectParseHelper SelectParser;
         IntervalParseHelper IntervalParser;
+        WhereParseHelper WhereParser;
         public QueryParser()
         {
             SelectParser = new SelectParseHelper();
             IntervalParser = new IntervalParseHelper();
+            WhereParser = new WhereParseHelper();
         }     
         public Query ParserQuery(string query)
         {
+            // TODO: ERROR HANDLING
             // split the different statement parts
-           string[] statmenets = query.ToLower().Split(new []{"select","interval","where"},StringSplitOptions.TrimEntries);
+            string[] statmenets = query.ToLower().Split(new []{"select","interval","where"},StringSplitOptions.TrimEntries);
 
-           var selectStatement = SelectParser.ParseSelect(statmenets[1]);
-           var intervalStatement = IntervalParser.ParseInterval(statmenets[2]);
-            return null;
+            var selectStatement = SelectParser.ParseSelect(statmenets[1]);
+            var intervalStatement = IntervalParser.ParseInterval(statmenets[2]);
+            var whereStatemennt = WhereParser.ParseWhere(statmenets[3]);
+         
+            return new Query
+            {
+                Id = Guid.NewGuid(),
+                SelectStatement = selectStatement,
+                IntervalStatement = intervalStatement,
+                WhereStatement = whereStatemennt
+            };
         }
     }
 }

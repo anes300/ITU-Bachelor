@@ -9,8 +9,8 @@ namespace Model.Queries.Expressions
 {
     public class WhereExpression
     {
-        public decimal exp1 { get; set; }
-        public decimal exp2 { get; set; }
+        public string exp1 { get; set; }
+        public string exp2 { get; set; }
         public WhereExpOperator Operator { get; set; }
     }
 }

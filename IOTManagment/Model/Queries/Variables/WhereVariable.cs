@@ -10,8 +10,8 @@ namespace Model.Queries.Variables
 {
     public class WhereVariable
     {
-        public List<WhereExpression> Expressions { get; set; } = new List<WhereExpression>();
-        public WhereOperator Operator { get; set; }
+        public List<WhereExpression> Expressions { get; set; } = new List<WhereExpression>(); // < > = 
+        public List<WhereOperator> Operators { get; set; } = new List<WhereOperator>(); // AND OR
 
     }
 }
