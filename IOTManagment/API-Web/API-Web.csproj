@@ -19,4 +19,7 @@
     <None Remove="ZeroMQ" />
     <None Remove="NetMQ" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Services\Services.csproj" />
+  </ItemGroup>
 </Project>
