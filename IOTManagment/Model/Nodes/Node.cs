@@ -1,4 +1,4 @@
-﻿using Model.Enum;
+﻿using Model.Nodes.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;

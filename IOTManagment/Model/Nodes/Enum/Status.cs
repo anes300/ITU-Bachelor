@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Enum
+namespace Model.Nodes.Enum
 {
-    public enum DataType
+    public enum Status
     {
-        Temperature = 1,
-
+        Inactive = 0,
+        Active = 1
     }
 }
