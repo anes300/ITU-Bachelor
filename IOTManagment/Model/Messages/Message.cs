@@ -5,7 +5,7 @@ namespace Model.Messages
     public class Message 
     {  
         private Guid messageId;
-        private String message;
+        public string message { get; }
         public Message(Guid messageId, string message)
         {  
             this.messageId = messageId;

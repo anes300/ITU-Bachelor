@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="NetMQ" />
+    <None Remove="Networking\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NetMQ" Version="4.0.1.8" />
@@ -16,5 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Networking\" />
   </ItemGroup>
 </Project>
