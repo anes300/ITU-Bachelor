@@ -9,7 +9,7 @@ using Model.Queries;
 using NodeEngine.Jobs;
 using System.Text.Json;
 
-namespace NodeEngine.Service
+namespace NodeEngine.Services
 {
     public class QueryScheduler : IDisposable
     {
