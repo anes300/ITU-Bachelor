@@ -18,7 +18,7 @@ namespace NodeEngine.Networking
             using (var listener = new PullSocket())
             {
                 Console.WriteLine("Started Listening on port 6001...");
-                listener.Bind("tcp://*:6001");
+                listener.Bind("tcp://127.0.0.1:6001");
 
                 while (true)
                 {

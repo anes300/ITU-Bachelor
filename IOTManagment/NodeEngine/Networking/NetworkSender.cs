@@ -1,7 +1,8 @@
-﻿using NetMQ.Sockets;
-using NetMQ;
-using System;
+﻿using System;
 using System.Net;
+using NetMQ;
+using NetMQ.Sockets;
+using Model.Messages;
 
 namespace NodeEngine.Networking
 {

@@ -4,26 +4,41 @@ using System.Net;
 using System.Text.Json;
 using NodeEngine.Networking;
 using Model.Messages;
+using System.Net.Sockets;
 
 Console.WriteLine("Hello, World!");
 
 string test = "Select temp, Sum(cpu) Interval 50 Where (temp > 50) && (cpu < 40 || temp > 40 || cpu = 50)";
 
+// Setup Receiver for CONNECT Message
 Console.WriteLine("Enter Connection ip");
-var ip = Console.ReadLine();
+var recieverIp = Console.ReadLine();
 Console.WriteLine("Enter Connection Port");
-int port = int.Parse(Console.ReadLine());
+int recieverPort = int.Parse(Console.ReadLine());
 
-// Sender
-var msg = new Message(Guid.NewGuid(), "hej fra Node", MessageType.CONNECT, "127.0.0.1", 6001);
-var json = JsonSerializer.Serialize(msg);
-var sender = new NetworkSender(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6000), json);
-var senderThread = new Thread(() => sender.SendMessage());
-senderThread.Start();
-
-// Listener
+// Listener (OBS: LISTNER SHOULD RUN FIRST - CAN'T SEND WITHOUT LISTENER)
 var listener = new NetworkListener();
 var listenerThread = new Thread(() => listener.StartListener());
 listenerThread.Start();
 Console.WriteLine("Started Listener on port 6001");
+
+// Get Local IP Address
+string nodeIp = default;
+
+var host = Dns.GetHostEntry(Dns.GetHostName());
+foreach (var localIp in host.AddressList)
+{
+    if (localIp.AddressFamily == AddressFamily.InterNetwork && localIp.ToString() != "127.0.0.1")
+    {
+        nodeIp = localIp.ToString();
+        Console.WriteLine("IP Address of this node = " + nodeIp);
+    }
+}
+
+// Sender
+var msg = new Message(Guid.NewGuid(), "hej fra Node", MessageType.CONNECT, nodeIp, 6001);
+var json = JsonSerializer.Serialize(msg);
+var sender = new NetworkSender(new IPEndPoint(IPAddress.Parse(recieverIp), recieverPort), json);
+var senderThread = new Thread(() => sender.SendMessage());
+senderThread.Start();
 

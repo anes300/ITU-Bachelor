@@ -16,6 +16,7 @@ namespace Server.Networking
 
 		public void HandleMessage(string message)
         {
+			Console.WriteLine("Received something");
 			try
             {
 				var msg = JsonSerializer.Deserialize<Message>(message);
@@ -27,6 +28,11 @@ namespace Server.Networking
 						{
 							Console.WriteLine("MessageType: CONNECT");
 							var node = new IPEndPoint(IPAddress.Parse(msg.senderIP), msg.senderPort);
+							if (nodeChildren.Any(x => x.Address.Equals(IPAddress.Parse(msg.senderIP))))
+                            {
+								Console.WriteLine("Node already exists.");
+								break;
+                            } 
 							nodeChildren.Add(node);
 							break;
 						}
