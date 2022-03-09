@@ -15,10 +15,10 @@ namespace NodeEngine.Networking
 
         public void StartListener()
         {
-            using (var listener = new ResponseSocket())
+            using (var listener = new PullSocket())
             {
-                Console.WriteLine("Started Listening on port 6000...");
-                listener.Bind("tcp://*:6000");
+                Console.WriteLine("Started Listening on port 6001...");
+                listener.Bind("tcp://*:6001");
 
                 while (true)
                 {

@@ -8,10 +8,10 @@ namespace NodeEngine.Networking
 {
 	public class MessageHandler
 	{
-		List<IPEndPoint> ChildrenNode;
+		List<IPEndPoint> childrenNode;
 		public MessageHandler()
 		{
-		ChildrenNode = new List<IPEndPoint>();
+		childrenNode = new List<IPEndPoint>();
 		}
 
 		public void HandleMessage(string message)
@@ -25,14 +25,14 @@ namespace NodeEngine.Networking
 				case MessageType.CONNECT:
 					var ip = new IPEndPoint(IPAddress.Parse(msg.senderIP), msg.senderPort);
 					//When connecting a new node, add this to a list of children.
-					ChildrenNode.Add(ip);                  
+					childrenNode.Add(ip);                  
 					break;
 
 				case MessageType.FORWARD:
 					//Forwarding msg-object to all node's children.
 					var json = JsonSerializer.Serialize(msg);
-					foreach (var Child in ChildrenNode) {
-						var sender = new NetworkSender(Child, json);
+					foreach (var child in childrenNode) {
+						var sender = new NetworkSender(child, json);
 						sender.SendMessage();
 					}
 					break;

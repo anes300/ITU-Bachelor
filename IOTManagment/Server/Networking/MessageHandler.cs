@@ -23,8 +23,9 @@ namespace Server.Networking
             {
 				case MessageType.CONNECT:
                     {
+						var ip = new IPEndPoint(IPAddress.Parse(msg.senderIP), msg.senderPort);
 						Console.WriteLine("MessageType: CONNECT");
-						nodeChildren.Add(msg.sender);
+						nodeChildren.Add(ip);
 						break;
                     }
 
@@ -52,6 +53,7 @@ namespace Server.Networking
 
 				default:
 					// TODO: Handle if no type is given
+					Console.WriteLine("No msgType" + msg);
 					break;		
             }
 
