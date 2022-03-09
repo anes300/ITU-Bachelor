@@ -39,15 +39,14 @@ namespace NodeEngine.Networking
 					case MessageType.FORWARD:
 						{
 							Console.WriteLine("MessageType: FOWARD");
-
-							// Serialize message
-							var sendMsg = JsonSerializer.Serialize(msg);
-
+							
 							foreach (IPEndPoint child in nodeChildren)
 							{
-								var sender = new NetworkSender(child, sendMsg);
+								var sender = new NetworkSender(child, message);
 								sender.SendMessage();
 							}
+
+							//TODO: Do something to Query
 
 							break;
 						}
