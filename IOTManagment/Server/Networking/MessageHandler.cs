@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net;
+using System.Text.Json;
+using Model.Messages;
 
 namespace Server.Networking
 {
@@ -14,12 +16,47 @@ namespace Server.Networking
 
 		public void HandleMessage(string message)
         {
-			// TODO: JSON convert and handle
+			var msg = JsonSerializer.Deserialize<Message>(message);
+						
+			// MessageType
+			switch(msg.messageType)
+            {
+				case MessageType.CONNECT:
+                    {
+						Console.WriteLine("MessageType: CONNECT");
+						nodeChildren.Add(msg.sender);
+						break;
+                    }
+
+				case MessageType.FORWARD:
+					{
+						Console.WriteLine("MessageType: FOWARD");
+
+						// Serialize message
+						var sendMsg = JsonSerializer.Serialize(msg);
+
+						foreach (IPEndPoint child in nodeChildren)
+                        {
+							var sender = new NetworkSender(child, sendMsg);
+							sender.SendMessage();
+                        }
+
+						break;
+					}
+				case MessageType.RESPONSEAPI:
+					{
+
+						Console.WriteLine("MessageType: RESPONSEAPI");
+						break;
+					}
+
+				default:
+					// TODO: Handle if no type is given
+					break;		
+            }
 
 
-			// TODO: messageType switchCases/If
-
-			// TODO: Handle if statements
+				// TODO: Handle if statements
 
 			// TODO: Save ipAddress of Node to a list
 			nodeChildren.Add(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6000)); //Replace ip and port
