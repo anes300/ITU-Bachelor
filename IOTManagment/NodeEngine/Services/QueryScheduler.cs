@@ -15,15 +15,16 @@ namespace NodeEngine.Services
     {
 
         IScheduler scheduler;
+       
         public QueryScheduler()
         {
+         
             // using defaults
             StdSchedulerFactory factory = new StdSchedulerFactory();
-
-            scheduler = factory.GetScheduler().Result;
-
-            scheduler.Start().Wait();
             
+            scheduler = factory.GetScheduler().Result; 
+            scheduler.Start().Wait();
+           
         }
 
         public async Task AddQueryJobAsync(Query query)

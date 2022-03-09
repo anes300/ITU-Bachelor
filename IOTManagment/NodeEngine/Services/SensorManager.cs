@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NodeEngine.Services
 {
-    public class SensorManager
+    public class SensorManager : ISensorManager
     {
         
         // TODO: Add commands for more datatypes
@@ -21,7 +21,7 @@ namespace NodeEngine.Services
                     return ExecuteCommand("cat /sys/class/thermal/thermal_zone0/temp");
                 default:
                     return null;
-                    break;
+                   
             }
     
         }

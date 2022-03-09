@@ -1,5 +1,6 @@
 ﻿using Model.Queries;
 using Model.Queries.Statements;
+using NodeEngine.Services;
 using Quartz;
 using Serilog;
 using System;
@@ -13,13 +14,17 @@ namespace NodeEngine.Jobs
 {
     public class QueryExecutionJob : IJob
     {
-        
+
         public async Task Execute(IJobExecutionContext context)
         {
+           
             JobDataMap dataMap = context.JobDetail.JobDataMap;
             SelectStatement? selectStatement = JsonSerializer.Deserialize<SelectStatement>(dataMap.GetString("Select"));
             WhereStatement? whereStatement = JsonSerializer.Deserialize<WhereStatement>(dataMap.GetString("Where"));
 
+
+
+           // var i = queryHandler.CheckWhereStatement(whereStatement);
             Log.Logger.Information("Log Something");
             await Console.Error.WriteLineAsync("Select variable: " + selectStatement.Variables[0].Variable);
         }

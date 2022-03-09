@@ -7,10 +7,12 @@ using Model.Queries;
 using Model.Queries.Statements;
 using Serilog;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+
 
 // Setup logger
 var log = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
                 .WriteTo.Console()
                 .CreateLogger();
 Log.Logger = log;
