@@ -11,6 +11,5 @@ SensorManager sensorManager = new SensorManager();
 //string x = JsonSerializer.Serialize(parser.ParserQuery(test));
 //Console.WriteLine(JsonSerializer.Serialize(parser.ParserQuery(test)));
 
-Console.WriteLine(sensorManager.GetSensorData());
 
 

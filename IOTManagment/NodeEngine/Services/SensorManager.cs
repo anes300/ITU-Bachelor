@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model.Nodes.Enum;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,12 +12,12 @@ namespace NodeEngine.Services
     {
         
 
-        public string GetSensorData(string variable)
+        public string GetSensorData(DataType type)
         {
 
-            switch (variable)
+            switch (type)
             {
-                case "temp":
+                case DataType.Temperature:
                     return ExecuteCommand("cat /sys/class/thermal/thermal_zone0/temp");
                 default:
                     break;
@@ -26,6 +27,7 @@ namespace NodeEngine.Services
             return sensordata;
         }
 
+        // IMPORTANT: Commands will only work when running on linux system
         private string ExecuteCommand(string command)
         {         
             string result = "";
