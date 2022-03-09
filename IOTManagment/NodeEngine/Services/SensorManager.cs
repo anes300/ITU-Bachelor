@@ -11,7 +11,7 @@ namespace NodeEngine.Services
     public class SensorManager
     {
         
-
+        // TODO: Add commands for more datatypes
         public string GetSensorData(DataType type)
         {
 
@@ -20,11 +20,10 @@ namespace NodeEngine.Services
                 case DataType.Temperature:
                     return ExecuteCommand("cat /sys/class/thermal/thermal_zone0/temp");
                 default:
+                    return null;
                     break;
             }
-            string sensordata = ExecuteCommand("cat /sys/class/thermal/thermal_zone0/temp");
-
-            return sensordata;
+    
         }
 
         // IMPORTANT: Commands will only work when running on linux system
