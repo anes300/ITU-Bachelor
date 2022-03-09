@@ -6,8 +6,11 @@ namespace NodeEngine.Networking
 {
     public class NetworkListener
     {
+
+        MessageHandler messageHandler;
         public NetworkListener()
         {
+            messageHandler = new MessageHandler();
         }
 
         public void StartListener()
@@ -25,7 +28,7 @@ namespace NodeEngine.Networking
 
 
                     // Handle the Message
-                    MessageHandler.HandleMessage(msg);
+                    messageHandler.HandleMessage(msg);
                 }
             }
 
