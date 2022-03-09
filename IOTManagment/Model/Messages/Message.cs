@@ -7,22 +7,18 @@ namespace Model.Messages
     public class Message 
     {  
         public Guid messageId { get; }
-        public string message { get; }
+        public string messageBody { get; } // = PayloadBody
         public MessageType messageType { get; }
         public string senderIP { get; }
         public int senderPort { get; }
 
-        public Node? node { get; }
-        
-
-        public Message(Guid messageId, string message, MessageType messageType, string senderIP,int senderPort, Node? node)
+        public Message(Guid messageId, string messageBody, MessageType messageType, string senderIP,int senderPort)
         {  
             this.messageId = messageId;
-            this.message = message;
+            this.messageBody = messageBody;
             this.messageType = messageType;
             this.senderIP = senderIP;
             this.senderPort = senderPort;
-            this.node = node;
         }
     }
 
