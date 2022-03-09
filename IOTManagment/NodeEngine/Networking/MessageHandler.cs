@@ -25,7 +25,6 @@ namespace NodeEngine.Networking
 				case MessageType.CONNECT:
 					var ip = new IPEndPoint(IPAddress.Parse(msg.senderIP), msg.senderPort);
 					//When connecting a new node, add this to a list of children.
-					if (ChildrenNode.Contains(ip)) break;
 					ChildrenNode.Add(ip);                  
 					break;
 
