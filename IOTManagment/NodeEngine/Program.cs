@@ -9,13 +9,16 @@ using Model.Queries.Statements;
 using Serilog;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
-
+using NodeEngine.Networking;
+using Model.Messages;
+using System.Net.Sockets;
 
 // Setup logger
 var log = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.Console()
                 .CreateLogger();
+// Set global logger
 Log.Logger = log;
 
 // create log factory for scheduler
@@ -25,16 +28,13 @@ var logFactory = new LoggerFactory()
 Quartz.Logging.LogContext.SetCurrentLogProvider(logFactory);
 QueryScheduler scheduler = new QueryScheduler();
 Console.WriteLine("Query Engine Started");
-using NodeEngine.Networking;
-using Model.Messages;
-using System.Net.Sockets;
 
 string test = "Select temp, Sum(cpu) Interval 1000 Where (temp > 50) && (cpu < 40 || temp > 40 || cpu = 50)";
 
 string test2 = "Select CPU, Sum(cpu) Interval 1000 Where (temp > 50) && (cpu < 40 || temp > 40 || cpu = 50)";
 
 
-log.Information("");
+
 
 QueryParser parser = new QueryParser();
 Console.WriteLine(JsonSerializer.Serialize(parser.ParserQuery(test)));
