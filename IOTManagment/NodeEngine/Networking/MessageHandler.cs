@@ -1,53 +1,67 @@
-﻿using Model.Messages;
-using System;
+﻿using System;
 using System.Net;
 using System.Text.Json;
+using Model.Messages;
 
 
 namespace NodeEngine.Networking
 {
 	public class MessageHandler
 	{
-		List<IPEndPoint> childrenNode;
+		List<IPEndPoint> nodeChildren;
+
 		public MessageHandler()
 		{
-		childrenNode = new List<IPEndPoint>();
+			nodeChildren = new List<IPEndPoint>();
 		}
 
 		public void HandleMessage(string message)
-        {
-			var msg = JsonSerializer.Deserialize<Message>(message);
-			// TODO: Convert JSON to object
-			// TODO: MessageType
-			// TODO: Handle If statements
-			switch (msg.messageType) 
+		{
+			try
 			{
-				case MessageType.CONNECT:
-					var ip = new IPEndPoint(IPAddress.Parse(msg.senderIP), msg.senderPort);
-					//When connecting a new node, add this to a list of children.
-					childrenNode.Add(ip);                  
-					break;
+				var msg = JsonSerializer.Deserialize<Message>(message);
 
-				case MessageType.FORWARD:
-					//Forwarding msg-object to all node's children.
-					var json = JsonSerializer.Serialize(msg);
-					foreach (var child in childrenNode) {
-						var sender = new NetworkSender(child, json);
-						sender.SendMessage();
-					}
-					break;
-				default:
-					Console.WriteLine("Anes burde gøre noget her :)");
-					break;
+				// MessageType
+				switch (msg.messageType)
+				{
+					case MessageType.CONNECT:
+						{
+							Console.WriteLine("MessageType: CONNECT");
+							var node = new IPEndPoint(IPAddress.Parse(msg.senderIP), msg.senderPort);
+							nodeChildren.Add(node);
+							break;
+						}
+					case MessageType.FORWARD:
+						{
+							Console.WriteLine("MessageType: FOWARD");
+
+							// Serialize message
+							var sendMsg = JsonSerializer.Serialize(msg);
+
+							foreach (IPEndPoint child in nodeChildren)
+							{
+								var sender = new NetworkSender(child, sendMsg);
+								sender.SendMessage();
+							}
+
+							break;
+						}
+					case MessageType.RESPONSEAPI:
+						{
+							Console.WriteLine("MessageType: RESPONSEAPI");
+							break;
+						}
+					default:
+						// TODO: Handle if no type is given
+						Console.WriteLine("No msgType" + msg);
+						break;
+				}
 			}
-			// If MessageType == Query
-				// Handle Query
-				// Send Query to Child
-
-			// if MessageType = ConnectMessage
-				// Check for Parent - if Parent for new Node, register new child to list
-				// Send to Parent => (Server / Topology Manager)
-        }
+			catch
+			{
+				Console.WriteLine($"Could not deserialize. Message: {message}");
+			}
+		}
 	}
 }
 
