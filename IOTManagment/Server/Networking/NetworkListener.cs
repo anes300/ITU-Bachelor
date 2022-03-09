@@ -13,11 +13,11 @@ namespace Server.Networking
 
 		public void StartListener()
         {
-            using (var listener = new ResponseSocket())
+            using (var listener = new PullSocket())
             {
                 Console.WriteLine("Started Listening on port 6000...");
                 listener.Bind("tcp://*:6000");
-                
+                MessageHandler messageHandler = new MessageHandler();
                 while (true)
                 {
                     // Listen for messsages
@@ -26,11 +26,11 @@ namespace Server.Networking
 
 
                     // Handle the Message
-                    MessageHandler.HandleMessage(msg);
+                    messageHandler.HandleMessage(msg);
                 }
             }
+
 
         }
     }
 }
-

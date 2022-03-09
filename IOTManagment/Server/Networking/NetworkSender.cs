@@ -9,22 +9,22 @@ namespace Server.Networking
 	public class NetworkSender
 	{
 		IPEndPoint receiver;
-		Message message;
+		string message;
 
 		public NetworkSender(IPEndPoint receiver, string message)
 		{
 			this.receiver = receiver;
-			this.message = new Message(new Guid(), message);
+			this.message = message;
 		}
 
 		public void SendMessage()
         {
-			using (var sender = new RequestSocket())
+			using (var sender = new PushSocket())
             {
 				Console.WriteLine("Connecting to socket...");
 				sender.Connect($"tcp://{receiver.Address}:{receiver.Port}");
 
-				sender.SendFrame(message.message);
+				sender.SendFrame(message);
 
 				Console.WriteLine("Message sent. Closing thread.");
             }
