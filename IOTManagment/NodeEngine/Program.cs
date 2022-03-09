@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using NodeEngine.Services;
 using Services;
 using System.Text.Json;
 using NodeEngine.Jobs;
