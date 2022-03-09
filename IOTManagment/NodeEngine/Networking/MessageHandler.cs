@@ -23,8 +23,10 @@ namespace NodeEngine.Networking
 			switch (msg.messageType) 
 			{
 				case MessageType.CONNECT:
+					var ip = new IPEndPoint(IPAddress.Parse(msg.senderIP), msg.senderPort);
 					//When connecting a new node, add this to a list of children.
-					ChildrenNode.Add(new IPEndPoint(IPAddress.Parse(msg.senderIP),msg.senderPort));
+					if (ChildrenNode.Contains(ip)) break;
+					ChildrenNode.Add(ip);                  
 					break;
 
 				case MessageType.FORWARD:
