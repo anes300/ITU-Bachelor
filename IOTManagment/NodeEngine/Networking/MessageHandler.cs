@@ -28,6 +28,11 @@ namespace NodeEngine.Networking
 						{
 							Console.WriteLine("MessageType: CONNECT");
 							var node = new IPEndPoint(IPAddress.Parse(msg.senderIP), msg.senderPort);
+							if (nodeChildren.Any(x => x.Address.Equals(IPAddress.Parse(msg.senderIP))))
+							{
+								Console.WriteLine("Node already exists.");
+								break;
+							}
 							nodeChildren.Add(node);
 							break;
 						}
@@ -57,9 +62,10 @@ namespace NodeEngine.Networking
 						break;
 				}
 			}
-			catch
+			catch (Exception e)
 			{
 				Console.WriteLine($"Could not deserialize. Message: {message}");
+				Console.WriteLine($"Exception: {e}");
 			}
 		}
 	}
