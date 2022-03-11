@@ -3,17 +3,43 @@ using NodeEngine.Services;
 using Services;
 using System.Net;
 using System.Text.Json;
+using NodeEngine.Jobs;
+using Model.Queries;
+using Model.Queries.Statements;
+using Serilog;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using NodeEngine.Networking;
 using Model.Messages;
 using System.Net.Sockets;
 
-Console.WriteLine("Hello, World!");
-SensorManager sensorManager = new SensorManager();
-//string test = "Select temp, Sum(cpu) Interval 50 Where (temp > 50) && (cpu < 40 || temp > 40 || cpu = 50)";
+// Setup logger
+var log = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .CreateLogger();
+// Set global logger
+Log.Logger = log;
 
-//QueryParser parser = new QueryParser();
-//string x = JsonSerializer.Serialize(parser.ParserQuery(test));
-//Console.WriteLine(JsonSerializer.Serialize(parser.ParserQuery(test)));
+// create log factory for scheduler
+var logFactory = new LoggerFactory()
+    .AddSerilog(log);
+// sets the logger for the Scheduler 
+Quartz.Logging.LogContext.SetCurrentLogProvider(logFactory);
+QueryScheduler scheduler = new QueryScheduler();
+Console.WriteLine("Query Engine Started");
+
+string test = "Select temp, Sum(cpu) Interval 1000 Where (temp > 50) && (cpu < 40 || temp > 40 || cpu = 50)";
+
+string test2 = "Select CPU, Sum(cpu) Interval 1000 Where (temp > 50) && (cpu < 40 || temp > 40 || cpu = 50)";
+
+
+
+
+QueryParser parser = new QueryParser();
+Console.WriteLine(JsonSerializer.Serialize(parser.ParserQuery(test)));
+var query = parser.ParserQuery(test);
+var query2 = parser.ParserQuery(test2);
 
 // Setup Receiver for CONNECT Message
 Console.WriteLine("Enter Connection ip");
