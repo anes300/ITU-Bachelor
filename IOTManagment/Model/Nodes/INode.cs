@@ -13,10 +13,10 @@ namespace Model.Nodes
 
        
 
-        public IPAddress? Parent { get; }
+        public string? Parent { get; }
 
         //Works as ID
-        public IPAddress Address { get; set; }
+        public string Address { get; set; }
 
         
 

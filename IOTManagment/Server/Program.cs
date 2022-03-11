@@ -9,10 +9,14 @@ using System.Net;
 
 Console.WriteLine("Server starting...");
 
+TopologyManager topologyManager = new();
+
+MessageHandler messageHandler = new(topologyManager);
+
 // TODO: Make threads for NetworkListener
 
 // Listener
-var listener = new NetworkListener();
+var listener = new NetworkListener(messageHandler);
 var listenerThread = new Thread(() => listener.StartListener());
 listenerThread.Start();
 Console.WriteLine("Started Listener on port 6000");

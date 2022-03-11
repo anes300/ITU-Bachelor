@@ -11,34 +11,16 @@ namespace Model.Nodes
 {
     public class Node : INode
     {
-        public IPAddress? Parent { get;}
+        public string? Parent { get; set; }
+        public int? ParentPort { get; set; }
 
-        public IPAddress Address { get; set; }
+        public string Address { get; set; }
+        public int AddressPort { get; set; }
 
         public NodeType Type { get; set; }
         public Status Status { get; set; }
-
         public DataType DataType { get; set; }
 
-
-        //Root-Constructor
-        public Node(IPAddress address, Status status, NodeType nodeType)
-        {
-            this.Address = address;
-            this.Status = status;
-            this.Type = nodeType;
-           
-
-        }
-        public Node(IPAddress address, IPAddress parent, Status status, NodeType nodeType, DataType dataType) 
-        { 
-            this.Address = address;
-            this.Parent = parent;
-            this.Status = status;
-            this.Type = nodeType;
-            this.DataType = dataType;
-            
-        }
 
     }
 }

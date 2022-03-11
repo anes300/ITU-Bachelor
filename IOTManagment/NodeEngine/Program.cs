@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using NodeEngine.Networking;
 using Model.Messages;
 using System.Net.Sockets;
+using Model.Nodes;
+using Model.Nodes.Enum;
 
 // Setup logger
 var log = new LoggerConfiguration()
@@ -66,9 +68,27 @@ foreach (var localIp in host.AddressList)
     }
 }
 
-// Sender
-var msg = new Message(Guid.NewGuid(), "hej fra Node", MessageType.CONNECT, nodeIp, 6001);
+//EndPoints
+var reciever = new IPEndPoint(IPAddress.Parse(recieverIp), recieverPort);
+var NodeEndPoint = new IPEndPoint(IPAddress.Parse(nodeIp), 6001);
+
+//Node & serialization
+var node = new Node
+{
+    Parent = recieverIp,
+    ParentPort = recieverPort,
+    Address = nodeIp,
+    AddressPort = 6001,
+    Type = NodeType.NODE,
+    Status = Status.ACTIVE,
+    DataType = DataType.TEMPERATURE_CPU,
+};
+
+var jsonNode = JsonSerializer.Serialize(node);
+
+// Sender-connect message to server.
+var msg = new Message(Guid.NewGuid(), jsonNode, MessageType.CONNECT, nodeIp, 6001);
 var json = JsonSerializer.Serialize(msg);
-var sender = new NetworkSender(new IPEndPoint(IPAddress.Parse(recieverIp), recieverPort), json);
+var sender = new NetworkSender(reciever, json);
 var senderThread = new Thread(() => sender.SendMessage());
 senderThread.Start();

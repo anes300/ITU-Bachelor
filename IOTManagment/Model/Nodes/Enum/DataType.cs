@@ -8,7 +8,9 @@ namespace Model.Nodes.Enum
 {
     public enum DataType
     {
-        Temperature = 1,
+        TEMPERATURE_CPU = 1,
+        TEMPERATURE_GPU = 2,
+        TEMPERATURE_BOTH = 3,
 
     }
 }

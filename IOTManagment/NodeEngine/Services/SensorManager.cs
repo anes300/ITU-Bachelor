@@ -17,7 +17,7 @@ namespace NodeEngine.Services
 
             switch (type)
             {
-                case DataType.Temperature:
+                case DataType.TEMPERATURE_CPU:
                     return ExecuteCommand("cat /sys/class/thermal/thermal_zone0/temp");
                 default:
                     return null;
