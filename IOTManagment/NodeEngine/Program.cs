@@ -29,15 +29,16 @@ Quartz.Logging.LogContext.SetCurrentLogProvider(logFactory);
 QueryScheduler scheduler = new QueryScheduler();
 Console.WriteLine("Query Engine Started");
 
-string test = "Select temp, Sum(cpu) Interval 1000 Where (temp > 50)";
+string test = "Select Temperature, Sum(cpu) Interval 1000 Where (temp > 50)";
 
-string test2 = "Select CPU, Sum(cpu) Interval 1000 Where (temp > 50) && (cpu < 40 || temp > 40 && cpu = 50)";
+string test2 = "Select Temperature, Sum(cpu) Interval 100000 Where (Temperature > 50) && (Temperature < 40 || Temperature > 40 && Temperature = 50)";
 
 QueryParser parser = new QueryParser();
 Console.WriteLine(JsonSerializer.Serialize(parser.ParserQuery(test)));
 var query = parser.ParserQuery(test);
 var query2 = parser.ParserQuery(test2);
 
+scheduler.AddQueryJobAsync(query2);
 // Setup Receiver for CONNECT Message
 Console.WriteLine("Enter Connection ip");
 var recieverIp = Console.ReadLine();

@@ -109,9 +109,10 @@ namespace NodeEngine.Services
             try
             {           
             // check if the exp is a datatype, if yes then gets the data from sensor
-            if (Enum.IsDefined(typeof(DataType), exp))
+            if (Enum.GetNames(typeof(DataType)).Any(x => x.ToLower() == exp))
             {
-               string data = sensorManager.GetSensorData(Enum.Parse<DataType>(exp));
+                    DataType dataType = Enum.Parse<DataType>(exp,true);
+               string data = sensorManager.GetSensorData(dataType);
 
                return double.Parse(data);                
             }
