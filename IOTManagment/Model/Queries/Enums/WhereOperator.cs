@@ -8,6 +8,7 @@ namespace Model.Queries.Enums
 {
     public enum WhereOperator
     {
+        None,
         And,
         Or
     }
