@@ -19,15 +19,15 @@ namespace Server.Networking
 
 		public void SendMessage()
         {
-			using (var sender = new PushSocket())
-            {
-				Console.WriteLine("Connecting to socket...");
-				sender.Connect($"tcp://{receiver.Address}:{receiver.Port}");
+			var sender = new PushSocket();
+           
+			Console.WriteLine("Connecting to socket...");
+			sender.Connect($"tcp://{receiver.Address}:{receiver.Port}");
 
-				sender.SendFrame(message);
+			sender.SendFrame(message);
 
-				Console.WriteLine("Message sent. Closing thread.");
-            }
+			Console.WriteLine("Message sent. Closing thread.");
+            
         }
 	}
 }

@@ -19,15 +19,15 @@ namespace NodeEngine.Networking
 
 		public void SendMessage()
 		{
-			using (var sender = new PushSocket())
-			{
-				Console.WriteLine("Connecting to socket...");
-				sender.Connect($"tcp://{Receiver.Address}:{Receiver.Port}");
+			var sender = new PushSocket();
+			
+			Console.WriteLine("Connecting to socket...");
+			sender.Connect($"tcp://{Receiver.Address}:{Receiver.Port}");
 
-				sender.SendFrame(Message);
+			sender.SendFrame(Message);
 
-				Console.WriteLine("Message sent. Closing thread.");
-			}
+			Console.WriteLine("Message sent. Closing thread.");
+			
 		}
 	}
 }
