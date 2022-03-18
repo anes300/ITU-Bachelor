@@ -2,20 +2,22 @@
 using System.Net;
 using System.Text.Json;
 using Model.Messages;
-
+using Model.Queries;
+using NodeEngine.Services;
 
 namespace NodeEngine.Networking
 {
 	public class MessageHandler
 	{
 		List<IPEndPoint> nodeChildren;
-
-		public MessageHandler()
+		QueryScheduler scheduler;
+		public MessageHandler( )
 		{
 			nodeChildren = new List<IPEndPoint>();
+			scheduler = new QueryScheduler();
 		}
 
-		public void HandleMessage(string message)
+		public async void HandleMessage(string message)
 		{
 			try
 			{
@@ -55,6 +57,20 @@ namespace NodeEngine.Networking
 							Console.WriteLine("MessageType: RESPONSEAPI");
 							break;
 						}
+					case MessageType.QUERY:
+                        {
+							Console.WriteLine("MessageType: QUERY");
+							Query q = JsonSerializer.Deserialize<Query>(msg.messageBody);
+							if (q == null) throw new Exception("Query is null");
+
+							await scheduler.AddQueryJobAsync(q);
+							foreach (IPEndPoint child in nodeChildren)
+							{
+								var sender = new NetworkSender(child, message);
+								sender.SendMessage();
+							}
+							break;
+                        }
 					default:
 						// TODO: Handle if no type is given
 						Console.WriteLine("No msgType" + msg);

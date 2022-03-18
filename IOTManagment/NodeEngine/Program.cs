@@ -31,18 +31,6 @@ Quartz.Logging.LogContext.SetCurrentLogProvider(logFactory);
 QueryScheduler scheduler = new QueryScheduler();
 Console.WriteLine("Query Engine Started");
 
-string test = "Select temp, Sum(cpu) Interval 1000 Where (temp > 50) && (cpu < 40 || temp > 40 || cpu = 50)";
-
-string test2 = "Select CPU, Sum(cpu) Interval 1000 Where (temp > 50) && (cpu < 40 || temp > 40 || cpu = 50)";
-
-
-
-
-QueryParser parser = new QueryParser();
-Console.WriteLine(JsonSerializer.Serialize(parser.ParserQuery(test)));
-var query = parser.ParserQuery(test);
-var query2 = parser.ParserQuery(test2);
-
 // Setup Receiver for CONNECT Message
 Console.WriteLine("Enter Connection ip");
 var recieverIp = Console.ReadLine();
@@ -87,7 +75,7 @@ var node = new Node
 var jsonNode = JsonSerializer.Serialize(node);
 
 // Sender-connect message to server.
-var msg = new Message(Guid.NewGuid(), jsonNode, MessageType.CONNECT, nodeIp, 6001);
+var msg = new Message(jsonNode, MessageType.CONNECT, nodeIp, 6001);
 var json = JsonSerializer.Serialize(msg);
 var sender = new NetworkSender(reciever, json);
 var senderThread = new Thread(() => sender.SendMessage());
