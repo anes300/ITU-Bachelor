@@ -18,7 +18,7 @@ namespace Server.Networking
             using (var listener = new PullSocket())
             {
                 Console.WriteLine("Started Listening on port 6000...");
-                listener.Bind("tcp://127.0.0.1:6000");
+                listener.Bind("tcp://0.0.0.0:6000");
                 while (true)
                 {
                     // Listen for messsages
