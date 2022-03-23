@@ -7,6 +7,7 @@ using System.Text.Json;
 using Server.Networking;
 using System.Net;
 using Model.Queries;
+using Model.Nodes;
 
 colorConsole(@"###########################################", ConsoleColor.White,ConsoleColor.Black);
 colorConsole(@"#                                         #", ConsoleColor.White, ConsoleColor.Black);
@@ -34,36 +35,41 @@ listenerThread.Start();
 Console.WriteLine("Started Listener on port 6000");
 
 
-Console.WriteLine("Available commands:");
-Console.WriteLine("stop - Shutdown console-application");
-Console.WriteLine("query - ");
-Console.WriteLine("nodes - Specific node by id");
-Console.WriteLine("clear - Go back to previous 'page'");
-Console.WriteLine("Please enter a command");
-
 
 while (true)
 {
-    
+    #region Commmand info
+    colorConsole("Available commands:", ConsoleColor.DarkGreen, ConsoleColor.White);
+    colorConsoleSame("stop", ConsoleColor.White, ConsoleColor.Black);
+    Console.WriteLine(" - Shutdown console-application");
+    colorConsoleSame("query", ConsoleColor.White, ConsoleColor.Black);
+    Console.WriteLine(" - ");
+    colorConsoleSame("nodes", ConsoleColor.White, ConsoleColor.Black);
+    Console.WriteLine(" - Specific node by id");
+    colorConsoleSame("clear", ConsoleColor.White, ConsoleColor.Black);
+    Console.WriteLine(" - Go back to previous 'page'");
+    Console.WriteLine("Please enter a command:");
+    #endregion Command info
+
     string input = Console.ReadLine().ToLower();
+    bool isActive = true;
     switch (input)
     {
         case "stop"://Shutdown console-application
             Environment.Exit(0);
             break;
         case "query": //Query options
-            #region option info
+            #region Query option info
             Console.WriteLine("Select a following option:");
             Console.WriteLine("input - Send query to nodes");
             Console.WriteLine("info - List of all current quries"); 
-            Console.WriteLine("stop - Spcific node by id");
+            Console.WriteLine("stop - Specific node by id");
             Console.WriteLine("back - Go back to previous 'page'");
             #endregion
-            bool isActive = true;
             while (isActive) { 
-                string option = Console.ReadLine().ToLower();
+                string options = Console.ReadLine().ToLower();
                 Console.Clear();
-                switch (option) 
+                switch (options) 
                 {
                     case "input":
                         // Gets query string from console and parses it, and sends it out to child nodes
@@ -80,7 +86,7 @@ while (true)
                             Console.WriteLine("Available options:");
                             Console.WriteLine("input - Send query to nodes");
                             Console.WriteLine("info - List of all current quries");
-                            Console.WriteLine("stop - Spcific node by id");
+                            Console.WriteLine("stop - Specific node by id");
                             Console.WriteLine("back - Go back to previous 'page'");
                             break;
                     case "back":
@@ -93,8 +99,86 @@ while (true)
             }
             break;
         case "nodes":
-            //TODO: Showcase all nodes and possibly their info
-            //topologyManager.GetIPAdresses();
+            Console.Clear();
+            #region Node option info
+            colorConsole("___________NODE___________", ConsoleColor.DarkGreen, ConsoleColor.White);
+            colorConsole("Select a following option:", ConsoleColor.DarkGreen, ConsoleColor.White);
+            colorConsoleSame("all", ConsoleColor.White, ConsoleColor.Black);
+            Console.WriteLine(" - Displays all current nodes");
+            colorConsoleSame("node", ConsoleColor.White, ConsoleColor.Black);
+            Console.WriteLine(" - Displays information about a specific node via IPEndPoint");
+            colorConsoleSame("back", ConsoleColor.White, ConsoleColor.Black);
+            Console.WriteLine(" - Go back to previous 'page'");
+            #endregion
+
+            while (isActive)
+            {
+                string option = Console.ReadLine().ToLower().Trim();
+                switch (option)
+                {
+                    case "all":
+                        int counter = 1;
+                        Console.Clear();
+                        Console.WriteLine("              Active Nodes              ");
+                        Console.WriteLine("----------------------------------------");
+
+                        foreach (var tmp in topologyManager.GetIPAdresses().Values.ToList())
+                        {
+                            Console.WriteLine($"{counter}| NodeIP:{tmp.Address}:{tmp.AddressPort}");
+                            Console.WriteLine("----------------------------------------");
+                            counter++;
+                        }
+                        break;
+                    case "node":
+                        Console.WriteLine("Enter IPEndPoint:");
+                        bool innerIsActive = true;
+
+                        string parseIp = default;
+                        while (innerIsActive)
+                        {
+                            parseIp = Console.ReadLine().ToLower().Trim();
+                            if (parseIp != "") break;
+                            Console.WriteLine("Re-enter IPEndPoint");
+                        }
+                        IPEndPoint ip = default(IPEndPoint);
+
+                        IPEndPoint.TryParse(parseIp, out ip);
+
+                        var node = topologyManager.GetNodeByIP(ip);
+                        if (node == null) { Console.WriteLine($"Not such IPEndPoint exists: {ip}"); break; }
+                        #region META data printed
+                        Console.Clear();
+                        Console.WriteLine($"NodeIP:{node.Address}:{node.AddressPort}");
+                        Console.WriteLine("----------------------------------------");
+                        Console.WriteLine($"Parent:{node.Parent}:{node.ParentPort}");
+                        Console.WriteLine($"Type:{node.Type}:");
+                        Console.WriteLine($"Status:{node.Status}");
+                        Console.WriteLine($"DataType:{node.DataType}");
+                        #endregion
+                        break;
+
+                    case "back":
+                        Console.Clear();
+                        isActive = false;
+                        break;
+                    case "-help":
+                        #region Node option info
+                        colorConsole("Select a following option:", ConsoleColor.DarkGreen, ConsoleColor.White);
+                        colorConsoleSame("all", ConsoleColor.White, ConsoleColor.Black);
+                        Console.WriteLine(" - Displays all current nodes");
+                        colorConsoleSame("node", ConsoleColor.White, ConsoleColor.Black);
+                        Console.WriteLine(" - Displays information about a specific node via IPEndPoint");
+                        colorConsoleSame("back", ConsoleColor.White, ConsoleColor.Black);
+                        Console.WriteLine(" - Go back to previous 'page'");
+                        #endregion
+                        break;
+                    default:
+                        Console.Clear();
+                        colorConsole("Unknown command. Use '-help' to see all commands", ConsoleColor.Red, ConsoleColor.White);
+                        break;
+                }
+                break;
+            }
             break;
         case "clear":
             Console.Clear();
@@ -114,6 +198,14 @@ while (true)
             break;
     }
 
+}
+
+static void colorConsoleSame(string text, ConsoleColor back, ConsoleColor fore)
+{
+    Console.ForegroundColor = fore;
+    Console.BackgroundColor = back;
+    Console.Write(text);
+    Console.ResetColor();
 }
 
 static void colorConsole(string text, ConsoleColor back, ConsoleColor fore)
