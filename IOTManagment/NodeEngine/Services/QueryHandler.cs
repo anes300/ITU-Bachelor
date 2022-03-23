@@ -113,14 +113,22 @@ namespace NodeEngine.Services
             {
                 DataType dataType = Enum.Parse<DataType>(exp,true);
                 string data = sensorManager.GetSensorData(dataType);
+                Double result = -1;
+
+                if (dataType == DataType.TEMPERATURE_CPU)
+                    {
+                        result = double.Parse(data) / 1000;
+                    }
 
                 if (dataType == DataType.TEMPERATURE_GPU)
                     {
                         data.Replace("temp=", "");
                         data.Replace("''C", "");
+                        result = double.Parse(data);
                     }
 
-                return double.Parse(data);                
+                result = double.Parse(data);
+                return result;
             }
 
             return double.Parse(exp);
