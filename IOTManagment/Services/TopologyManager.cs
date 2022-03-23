@@ -25,5 +25,10 @@ namespace Services
         {
             IPAdresses[nodeAdd] = node;
         }
+
+        public Dictionary<IPEndPoint, INode> GetIPAdresses()
+        {
+            return IPAdresses;
+        }
     }
 }
