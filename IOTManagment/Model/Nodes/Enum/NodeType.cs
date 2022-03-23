@@ -8,9 +8,9 @@ namespace Model.Nodes.Enum
 {
     public enum NodeType
     {
-        Sensor = 1,
-        Node = 2,
-        RouteNode = 3,
-        Root = 4
+        SENSOR = 1,
+        NODE = 2,
+        ROUTENODE = 3,
+        ROOT = 4
     }
 }

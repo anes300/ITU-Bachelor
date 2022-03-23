@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    internal interface ITopologyManager 
+    public interface ITopologyManager 
     {
         /*
        ˄          0
@@ -20,9 +20,10 @@ namespace Services
        ˅
        */
 
-        Dictionary<IPAddress, INode> IPAdresses { get; set;} 
-        public void AddNode(IPAddress nodeAdd, INode Node);
+        //TODO: Maybe change the Key-type from object to something comparable?
+        Dictionary<IPEndPoint, INode> IPAdresses { get; } 
+        public void AddNode(IPEndPoint nodeAdd, INode Node);
 
-        public void UpdateNode(IPAddress nodeAdd, INode node);
+        public void UpdateNode(IPEndPoint nodeAdd, INode node);
     }
 }

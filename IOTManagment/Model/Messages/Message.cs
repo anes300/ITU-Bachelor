@@ -12,9 +12,9 @@ namespace Model.Messages
         public string senderIP { get; }
         public int senderPort { get; }
 
-        public Message(Guid messageId, string messageBody, MessageType messageType, string senderIP,int senderPort)
+        public Message(string messageBody, MessageType messageType, string senderIP,int senderPort)
         {  
-            this.messageId = messageId;
+            this.messageId = Guid.NewGuid();
             this.messageBody = messageBody;
             this.messageType = messageType;
             this.senderIP = senderIP;
@@ -23,9 +23,10 @@ namespace Model.Messages
     }
 
     public enum MessageType
-    {
+    {       
         CONNECT=1,
         FORWARD=2,
-        RESPONSEAPI=3
+        RESPONSEAPI=3,
+        QUERY = 4,
     };
 }

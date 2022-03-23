@@ -7,8 +7,10 @@ namespace Server.Networking
 {
 	public class NetworkListener
 	{
-        public NetworkListener()
+        private readonly MessageHandler _messageHandler;
+        public NetworkListener(MessageHandler messageHandler)
         {
+            _messageHandler = messageHandler; 
         }
 
 		public void StartListener()
@@ -16,8 +18,7 @@ namespace Server.Networking
             using (var listener = new PullSocket())
             {
                 Console.WriteLine("Started Listening on port 6000...");
-                listener.Bind("tcp://127.0.0.1:6000");
-                MessageHandler messageHandler = new MessageHandler();
+                listener.Bind("tcp://0.0.0.0:6000");
                 while (true)
                 {
                     // Listen for messsages
@@ -26,7 +27,7 @@ namespace Server.Networking
 
 
                     // Handle the Message
-                    messageHandler.HandleMessage(msg);
+                    _messageHandler.HandleMessage(msg);
                 }
             }
 

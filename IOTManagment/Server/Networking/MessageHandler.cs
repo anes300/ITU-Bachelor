@@ -2,15 +2,21 @@
 using System.Net;
 using System.Text.Json;
 using Model.Messages;
+using Model.Nodes;
+using Model.Queries;
+using Services;
 
 namespace Server.Networking
 {
 	public class MessageHandler
 	{
 		List<IPEndPoint> nodeChildren;
+		private readonly ITopologyManager _topologyManager;
+		private IPEndPoint localIp = new IPEndPoint(IPAddress.Parse("0.0.0.0"), 6000);	
 
-		public MessageHandler()
+		public MessageHandler(ITopologyManager topologyManager)
 		{
+			_topologyManager = topologyManager;
 			nodeChildren = new List<IPEndPoint>();
 		}
 
@@ -27,18 +33,21 @@ namespace Server.Networking
 					case MessageType.CONNECT:
 						{
 							Console.WriteLine("MessageType: CONNECT");
-							var node = new IPEndPoint(IPAddress.Parse(msg.senderIP), msg.senderPort);
+							var node = JsonSerializer.Deserialize<Node>(msg.messageBody);
+							var NodeEndPoint = new IPEndPoint(IPAddress.Parse(node.Address), node.AddressPort);
 							if (nodeChildren.Any(x => x.Address.Equals(IPAddress.Parse(msg.senderIP))))
                             {
 								Console.WriteLine("Node already exists.");
 								break;
                             } 
-							nodeChildren.Add(node);
+							_topologyManager.AddNode(NodeEndPoint, node);
+							nodeChildren.Add(NodeEndPoint);
 							break;
 						}
+
 					case MessageType.FORWARD:
 						{
-							Console.WriteLine("MessageType: FOWARD");
+							Console.WriteLine("MessageType: FORWARD");
 
 							// Serialize message
 							var sendMsg = JsonSerializer.Serialize(msg);
@@ -67,6 +76,20 @@ namespace Server.Networking
 				Console.WriteLine($"Could not deserialize. Message: {message}");
             }
         }
+
+		public void SendQuery(Query query)
+        {
+			string body = JsonSerializer.Serialize(query);
+			Message msg = new Message(body, MessageType.QUERY,localIp.Address.ToString(), localIp.Port);
+			// Serialize message
+			var sendMsg = JsonSerializer.Serialize(msg);
+
+			foreach (IPEndPoint child in nodeChildren)
+			{
+				var sender = new NetworkSender(child, sendMsg);
+				sender.SendMessage();
+			}
+		}
 	}
 }
 

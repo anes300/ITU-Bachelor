@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using NodeEngine.Networking;
 using Model.Messages;
 using System.Net.Sockets;
+using Model.Nodes;
+using Model.Nodes.Enum;
 
 // Setup logger
 var log = new LoggerConfiguration()
@@ -29,16 +31,8 @@ Quartz.Logging.LogContext.SetCurrentLogProvider(logFactory);
 QueryScheduler scheduler = new QueryScheduler();
 Console.WriteLine("Query Engine Started");
 
-string test = "Select Temperature, Sum(cpu) Interval 1000 Where (temp > 50)";
-
-string test2 = "Select Temperature, Sum(cpu) Interval 100000 Where (Temperature > 50) && (Temperature < 40 || Temperature > 40 && Temperature = 50)";
-
-QueryParser parser = new QueryParser();
-Console.WriteLine(JsonSerializer.Serialize(parser.ParserQuery(test)));
-var query = parser.ParserQuery(test);
 var query2 = parser.ParserQuery(test2);
 
-scheduler.AddQueryJobAsync(query2);
 // Setup Receiver for CONNECT Message
 Console.WriteLine("Enter Connection ip");
 var recieverIp = Console.ReadLine();
@@ -64,9 +58,27 @@ foreach (var localIp in host.AddressList)
     }
 }
 
-// Sender
-var msg = new Message(Guid.NewGuid(), "hej fra Node", MessageType.CONNECT, nodeIp, 6001);
+//EndPoints
+var reciever = new IPEndPoint(IPAddress.Parse(recieverIp), recieverPort);
+var NodeEndPoint = new IPEndPoint(IPAddress.Parse(nodeIp), 6001);
+
+//Node & serialization
+var node = new Node
+{
+    Parent = recieverIp,
+    ParentPort = recieverPort,
+    Address = nodeIp,
+    AddressPort = 6001,
+    Type = NodeType.NODE,
+    Status = Status.ACTIVE,
+    DataType = DataType.TEMPERATURE_CPU,
+};
+
+var jsonNode = JsonSerializer.Serialize(node);
+
+// Sender-connect message to server.
+var msg = new Message(jsonNode, MessageType.CONNECT, nodeIp, 6001);
 var json = JsonSerializer.Serialize(msg);
-var sender = new NetworkSender(new IPEndPoint(IPAddress.Parse(recieverIp), recieverPort), json);
+var sender = new NetworkSender(reciever, json);
 var senderThread = new Thread(() => sender.SendMessage());
 senderThread.Start();

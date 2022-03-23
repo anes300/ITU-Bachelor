@@ -8,7 +8,7 @@ namespace Model.Nodes.Enum
 {
     public enum Status
     {
-        Inactive = 0,
-        Active = 1
+        INACTIVE = 0,
+        ACTIVE = 1
     }
 }
