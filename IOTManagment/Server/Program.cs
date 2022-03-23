@@ -17,7 +17,7 @@ TopologyManager topologyManager = new();
 
 MessageHandler messageHandler = new(topologyManager);
 QueryParser queryParser = new QueryParser();
-
+List<Query> queries = new List<Query>();
 // Listener
 var listener = new NetworkListener(messageHandler);
 var listenerThread = new Thread(() => listener.StartListener());
@@ -25,19 +25,20 @@ listenerThread.Start();
 Console.WriteLine("Started Listener on port 6000");
 
 
-
 Console.Clear();
 while (true)
 {
     printCommands(0);
-    string input = Console.ReadLine().ToLower();
+    string input = Console.ReadLine().ToLower().Trim();
     bool isActive = true;
+    
     switch (input)
     {
         case "stop"://Shutdown console-application
             Environment.Exit(0);
             break;
-        case "query": //Query options
+        case "query":
+            //Query options
             Console.Clear();
             while (isActive) { 
             printCommands(1);
@@ -46,14 +47,72 @@ while (true)
                 {
                     case "input":
                         // Gets query string from console and parses it, and sends it out to child nodes
+                        bool innerIsActive = true;
                         Console.WriteLine("Input Query:");
-                        string query = Console.ReadLine();
-                        Query q = queryParser.ParserQuery(query);
-                        messageHandler.SendQuery(q);
+                        while (innerIsActive)
+                        {
+                            string query = Console.ReadLine().Trim();
+                            if (query == "quit") { Console.Clear(); break; }
+                            if (query != "")
+                            {
+                                try
+                                {
+                                    Query q = queryParser.ParserQuery(query);
+                                    queries.Add(q);
+                                    messageHandler.SendQuery(q);
+                                    Console.Clear();
+                                    colorConsole("Query sent", ConsoleColor.Yellow, ConsoleColor.Black);
+                                    break;
+                                }
+                                catch (Exception ex)
+                                {
+                                    colorConsole("Incorrect format: Use Query formating", ConsoleColor.Red, ConsoleColor.White);
+                                    Console.WriteLine("Re-enter query or write quit");
+                                }
+                            }
+                        }
                         break;
                     case "info": //TODO: Create list of all queries
+                        Console.Clear();
+                        int counter = 1;
+                        Console.Clear();
+                        Console.WriteLine("              Active Quries              ");
+                        Console.WriteLine("----------------------------------------");
+
+                        if (queries.Count() == 0)
+                        {
+                            colorConsole("No Active quries...", ConsoleColor.Red, ConsoleColor.White);
+                            Console.WriteLine("");
+                            break;
+                        }
+                        foreach (Query x in queries)
+                        {
+                            Console.WriteLine($"{counter}| QueryId: {x.Id}");
+                            Console.WriteLine("----------------------------------------");
+                            counter++;
+                        }
                         break;
                     case "stop": //TODO: send a stop message and remove query from list
+                        Console.WriteLine("Input query id");
+                        Guid id = default;             
+                        while (true)
+                        {
+                            string value = Console.ReadLine().Trim();
+                            if (value == "quit") { Console.Clear(); break; }
+                            if(value != "")
+                            { 
+                                Guid.TryParse(value, out id);
+                                var foundQ = queries.Where(x => x.Id == id).FirstOrDefault();
+                                if(foundQ != null)
+                                {
+                                    Console.Clear();
+                                    queries.Remove(foundQ);
+                                    colorConsole("Query removed", ConsoleColor.Yellow, ConsoleColor.Black);
+                                    break;
+                                }
+                                else { colorConsole("No such Query found", ConsoleColor.Red, ConsoleColor.White); Console.WriteLine("Please re-enter query id or write quit"); }
+                            }
+                        }
                         break;
                     case "-help":
                         printCommands(1);
@@ -71,7 +130,6 @@ while (true)
             break;
         case "nodes":
             Console.Clear();
-
             while (isActive)
             {
             printCommands(2);
@@ -88,17 +146,17 @@ while (true)
                         if (listofnodes.Count() == 0)
                         {
                             colorConsole("No Active nodes...", ConsoleColor.Red, ConsoleColor.White);
-                            Console.WriteLine("\n");
+                            Console.WriteLine("");
                             
                             break;
                         }
                         foreach (var tmp in listofnodes)
                         {
-                            Console.WriteLine($"{counter}| NodeIP:{tmp.Address}:{tmp.AddressPort}");
+                            Console.WriteLine($"{counter}| NodeIP: {tmp.Address}:{tmp.AddressPort}");
                             Console.WriteLine("----------------------------------------");
                             counter++;
                         }
-                        Console.WriteLine("\n");
+                        Console.WriteLine("");
                         break;
 
                     case "node":
@@ -117,24 +175,25 @@ while (true)
                                 {
                                     IPEndPoint.TryParse(parseIp, out ip);
                                     var node = topologyManager.GetNodeByIP(ip);
-                                    if (node == null)
-                                    {
-                                        Console.WriteLine($"No such IPEndPoint exists: {ip}");
-                                        Console.WriteLine("Re-enter IPEndPoint or write quit");
-                                    }
-                                    else
+                                    if (node != null)
                                     {
                                         #region META data printed
                                         Console.Clear();
-
-                                        Console.WriteLine($"NodeIP:{node.Address}:{node.AddressPort}");
+                                        colorConsole("------------------INFO-------------------",ConsoleColor.Yellow,ConsoleColor.Black);
+                                        Console.WriteLine($"NodeIP: {node.Address}:{node.AddressPort}");
                                         Console.WriteLine("----------------------------------------");
-                                        Console.WriteLine($"NodeIP:{node.Parent}:{node.ParentPort}");
-                                        Console.WriteLine($"Parent:{node.Parent}:{node.ParentPort}");
-                                        Console.WriteLine($"Type:{node.Type}:");
-                                        Console.WriteLine($"Status:{node.Status}");
-                                        Console.WriteLine($"DataType:{node.DataType}");
+                                        Console.WriteLine($"Parent: {node.Parent}:{node.ParentPort}");
+                                        Console.WriteLine($"Type: {node.Type}");
+                                        Console.WriteLine($"Status: {node.Status}");
+                                        Console.WriteLine($"DataType: {node.DataType}");
+                                        Console.WriteLine("");
                                         #endregion
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"No such IPEndPoint exists: {ip}");
+                                        Console.WriteLine("Re-enter IPEndPoint or write quit");
                                     }
                                 }
                                 catch (Exception ex)
@@ -142,7 +201,6 @@ while (true)
                                     colorConsole("Incorrect format: Use IP formating", ConsoleColor.Red, ConsoleColor.White);
                                     Console.WriteLine("Re-enter IPEndPoint or write quit");
                                 }
-                                
                             }else {
                                 Console.WriteLine("Re-enter IPEndPoint or write quit");
                             }
@@ -187,13 +245,13 @@ static void printCommands(int index)
             #region Main Printstatement
             colorConsole("__________MAIN___________", ConsoleColor.DarkGreen, ConsoleColor.White);
             colorConsole("Available commands:      ", ConsoleColor.DarkGreen, ConsoleColor.White);
-            colorConsoleSame("stop ", ConsoleColor.White, ConsoleColor.Black);
+            colorConsoleSame("stop ", ConsoleColor.White, ConsoleColor.Blue);
             Console.WriteLine(" - Shutdown console-application.");
-            colorConsoleSame("query", ConsoleColor.White, ConsoleColor.Black);
+            colorConsoleSame("query", ConsoleColor.White, ConsoleColor.Blue);
             Console.WriteLine(" - Query interface.");
-            colorConsoleSame("nodes", ConsoleColor.White, ConsoleColor.Black);
+            colorConsoleSame("nodes", ConsoleColor.White, ConsoleColor.Blue);
             Console.WriteLine(" - Node interface.");
-            colorConsoleSame("clear", ConsoleColor.White, ConsoleColor.Black);
+            colorConsoleSame("clear", ConsoleColor.White, ConsoleColor.Blue);
             Console.WriteLine(" - Clears the current Console text.");
             Console.WriteLine("Please enter a command:");
             #endregion
@@ -212,21 +270,22 @@ static void printCommands(int index)
             Console.WriteLine(" - Go back to previous 'page'");
             #endregion
             break;
-
         case 2://Node
             #region Node Printstatement
             colorConsole("___________NODE___________", ConsoleColor.DarkGreen, ConsoleColor.White);
             colorConsole("Select a following option:", ConsoleColor.DarkGreen, ConsoleColor.White);
-            colorConsoleSame("all ", ConsoleColor.White, ConsoleColor.Black);
+            colorConsoleSame("all ", ConsoleColor.White, ConsoleColor.Blue);
             Console.WriteLine(" - Displays all current nodes");
-            colorConsoleSame("node", ConsoleColor.White, ConsoleColor.Black);
+            colorConsoleSame("node", ConsoleColor.White, ConsoleColor.Blue);
             Console.WriteLine(" - Displays information about a specific node via IPEndPoint");
-            colorConsoleSame("back", ConsoleColor.White, ConsoleColor.Black);
+            colorConsoleSame("back", ConsoleColor.White, ConsoleColor.Blue);
             Console.WriteLine(" - Go back to previous 'page'");
             #endregion
             break;
         case 3://Funny
             #region logo
+            //Normal
+            /* 
             colorConsole(@"###########################################", ConsoleColor.White, ConsoleColor.Black);
             colorConsole(@"#  ______                        _        #", ConsoleColor.White, ConsoleColor.Black);
             colorConsole(@"# |___  /                       | |       #", ConsoleColor.White, ConsoleColor.Black);
@@ -236,6 +295,21 @@ static void printCommands(int index)
             colorConsole(@"# /_____\___|_| |_|\___\___/ \__,_|\___|  #", ConsoleColor.White, ConsoleColor.Black);
             colorConsole(@"#                                         #", ConsoleColor.White, ConsoleColor.Black);
             colorConsole(@"###########################################", ConsoleColor.White, ConsoleColor.Black);
+            */
+
+            //Ukraine-flag
+            
+            colorConsole(@"###########################################", ConsoleColor.Blue, ConsoleColor.White);
+            colorConsole(@"#  ______                        _        #", ConsoleColor.Blue, ConsoleColor.White);
+            colorConsole(@"# |___  /                       | |       #", ConsoleColor.Blue, ConsoleColor.White);
+            colorConsole(@"#    / / ___ _ __   ___ ___   __| | ___   #", ConsoleColor.Blue, ConsoleColor.White);
+            colorConsole(@"#   / / / _ \ '_ \ / __/ _ \ / _` |/ _ \  #", ConsoleColor.Blue, ConsoleColor.White);
+            colorConsole(@"#  / /_|  __/ | | | (_| (_) | (_| |  __/  #", ConsoleColor.Yellow, ConsoleColor.Black);
+            colorConsole(@"# /_____\___|_| |_|\___\___/ \__,_|\___|  #", ConsoleColor.Yellow, ConsoleColor.Black);
+            colorConsole(@"#                                         #", ConsoleColor.Yellow, ConsoleColor.Black);
+            colorConsole(@"###########################################", ConsoleColor.Yellow, ConsoleColor.Black);
+            
+
             #endregion
             break;
     }
