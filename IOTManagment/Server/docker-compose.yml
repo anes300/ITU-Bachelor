@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./:/etc/prometheus
+    ip:
+      - 192.168.1.66
+
+volumes:
+  prometheus-data:

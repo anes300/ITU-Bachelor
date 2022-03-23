@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 15s
+
+rule_files:
+  #- alert.yml
+
+scrape_configs:
+  - job_name: Prometheus
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 'localhost:9090'
+  - job_name: Server
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 'localhost:1234'
+          

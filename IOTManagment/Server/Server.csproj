@@ -10,9 +10,11 @@
   <ItemGroup>
     <None Remove="NetMQ" />
     <None Remove="Networking\" />
+    <None Remove="prometheus-net" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NetMQ" Version="4.0.1.8" />
+    <PackageReference Include="prometheus-net" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />

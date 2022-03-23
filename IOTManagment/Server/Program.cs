@@ -7,6 +7,7 @@ using System.Text.Json;
 using Server.Networking;
 using System.Net;
 using Model.Queries;
+using Prometheus;
 
 Console.WriteLine("Server starting...");
 
@@ -16,11 +17,18 @@ MessageHandler messageHandler = new(topologyManager);
 QueryParser queryParser = new QueryParser();
 // TODO: Make threads for NetworkListener
 
+// Prometheus setup
+var prometheus = new MetricServer(hostname: "localhost", port: 1234);
+prometheus.Start();
+var d = Metrics.CreateCounter("zencode_counter", "Counter for shiz");
+d.IncTo(5.2);
+
 // Listener
 var listener = new NetworkListener(messageHandler);
 var listenerThread = new Thread(() => listener.StartListener());
 listenerThread.Start();
 Console.WriteLine("Started Listener on port 6000");
+
 
 bool isActive = true;
 while(isActive)
