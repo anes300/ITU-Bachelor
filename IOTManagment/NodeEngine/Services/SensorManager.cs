@@ -19,6 +19,8 @@ namespace NodeEngine.Services
             {
                 case DataType.TEMPERATURE_CPU:
                     return ExecuteCommand("cat /sys/class/thermal/thermal_zone0/temp");
+                case DataType.TEMPERATURE_GPU:
+                    return ExecuteCommand("/opt/vc/bin/vcgencmd measure_temp");
                 default:
                     return null;
                    
