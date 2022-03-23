@@ -111,10 +111,29 @@ namespace NodeEngine.Services
             // check if the exp is a datatype, if yes then gets the data from sensor
             if (Enum.GetNames(typeof(DataType)).Any(x => x.ToLower() == exp))
             {
-                    DataType dataType = Enum.Parse<DataType>(exp,true);
-               string data = sensorManager.GetSensorData(dataType);
+                DataType dataType = Enum.Parse<DataType>(exp,true);
+                string data = sensorManager.GetSensorData(dataType);
+                Double result = -1;
 
-               return double.Parse(data);                
+                if (dataType == DataType.TEMPERATURE_CPU)
+                    {
+                        result = double.Parse(data) / 1000;
+                    }
+
+                if (dataType == DataType.TEMPERATURE_GPU)
+                    {
+                        data.Replace("temp=", "");
+                        data.Replace("''C", "");
+                        result = double.Parse(data);
+                    }
+
+                if (dataType == DataType.TEST_VAR)
+                    {
+                        result = double.Parse(data);
+                    }
+
+                result = double.Parse(data);
+                return result;
             }
 
             return double.Parse(exp);
