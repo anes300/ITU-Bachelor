@@ -63,6 +63,12 @@ namespace Server.Networking
 					case MessageType.RESPONSEAPI:
 						{
 							Console.WriteLine("MessageType: RESPONSEAPI");
+							var varResults = JsonSerializer.Deserialize<List<SelectVariableResult>>(msg.messageBody);
+
+                            foreach (var item in varResults)
+                            {
+								Console.WriteLine($"{item.Variable} has the value: {item.Value}");
+                            }
 							break;
 						}
 					default:

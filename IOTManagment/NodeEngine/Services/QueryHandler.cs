@@ -1,4 +1,5 @@
-﻿using Model.Nodes.Enum;
+﻿using Model.Messages;
+using Model.Nodes.Enum;
 using Model.Queries.Enums;
 using Model.Queries.Expressions;
 using Model.Queries.Statements;
@@ -124,6 +125,23 @@ namespace NodeEngine.Services
                 Log.Logger.Error("A Error happened, when trying to get expressions value with message: " + ex.Message);
                 throw;
             }
+        }
+
+        public List<SelectVariableResult> GetSelectResults(SelectStatement statement)
+        {
+            List<SelectVariableResult> result = new List<SelectVariableResult>();
+
+            foreach (SelectVariable variable in statement.Variables)
+            {
+                SelectVariableResult resultItem = new SelectVariableResult()
+                {
+                    Variable = variable.Variable,
+                    Operator = variable.Operator,
+                    Value = GetExpValue(variable.Variable)
+                };
+                result.Add(resultItem);
+            }
+            return result;
         }
     }
 }
