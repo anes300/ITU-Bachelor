@@ -8,9 +8,9 @@ namespace NodeEngine.Networking
     {
 
         MessageHandler messageHandler;
-        public NetworkListener()
+        public NetworkListener(MessageHandler handler)
         {
-            messageHandler = new MessageHandler();
+            messageHandler = handler;
         }
 
         public void StartListener()

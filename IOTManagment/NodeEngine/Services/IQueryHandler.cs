@@ -9,6 +9,7 @@ namespace NodeEngine.Services
 {
     public interface IQueryHandler
     {
-        public bool CheckWhereStatement(WhereStatement statement);
+        public bool CheckWhereStatement(WhereStatement statement); 
+ 
     }
 }

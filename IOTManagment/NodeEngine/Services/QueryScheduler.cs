@@ -8,6 +8,7 @@ using Quartz;
 using Model.Queries;
 using NodeEngine.Jobs;
 using System.Text.Json;
+using System.Net;
 
 namespace NodeEngine.Services
 {
@@ -27,7 +28,7 @@ namespace NodeEngine.Services
            
         }
 
-        public async Task AddQueryJobAsync(Query query)
+        public async Task AddQueryJobAsync(Query query, IPEndPoint parent)
         {
             int interval = query.IntervalStatement.Interval;
 
@@ -40,6 +41,8 @@ namespace NodeEngine.Services
                 .WithIdentity($"Job-{query.Id}", "Queries")
                 .UsingJobData("Select", selectStatement)
                 .UsingJobData("Where", whereStatement)
+                .UsingJobData("IP",parent.Address.ToString())
+                .UsingJobData("Port",parent.Port.ToString())
                 .Build();
             
             // Create the jobs trigger with the interval specified in the given query

@@ -11,10 +11,12 @@ namespace NodeEngine.Networking
 	{
 		List<IPEndPoint> nodeChildren;
 		QueryScheduler scheduler;
-		public MessageHandler( )
+		IPEndPoint parentEndPoint;
+		public MessageHandler(IPEndPoint parent)
 		{
 			nodeChildren = new List<IPEndPoint>();
 			scheduler = new QueryScheduler();
+			parentEndPoint = parent;
 		}
 
 		public async void HandleMessage(string message)
@@ -63,7 +65,7 @@ namespace NodeEngine.Networking
 							Query q = JsonSerializer.Deserialize<Query>(msg.messageBody);
 							if (q == null) throw new Exception("Query is null");
 
-							await scheduler.AddQueryJobAsync(q);
+							await scheduler.AddQueryJobAsync(q,parentEndPoint);
 							foreach (IPEndPoint child in nodeChildren)
 							{
 								var sender = new NetworkSender(child, message);

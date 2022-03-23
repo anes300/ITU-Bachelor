@@ -22,14 +22,11 @@ var log = new LoggerConfiguration()
                 .CreateLogger();
 // Set global logger
 Log.Logger = log;
-
 // create log factory for scheduler
 var logFactory = new LoggerFactory()
     .AddSerilog(log);
 // sets the logger for the Scheduler 
 Quartz.Logging.LogContext.SetCurrentLogProvider(logFactory);
-QueryScheduler scheduler = new QueryScheduler();
-Console.WriteLine("Query Engine Started");
 
 // Setup Receiver for CONNECT Message
 Console.WriteLine("Enter Connection ip");
@@ -37,8 +34,11 @@ var recieverIp = Console.ReadLine();
 Console.WriteLine("Enter Connection Port");
 int recieverPort = int.Parse(Console.ReadLine());
 
+var reciever = new IPEndPoint(IPAddress.Parse(recieverIp), recieverPort);
+MessageHandler handler = new MessageHandler(reciever);
+
 // Listener (OBS: LISTNER SHOULD RUN FIRST - CAN'T SEND WITHOUT LISTENER)
-var listener = new NetworkListener();
+var listener = new NetworkListener(handler);
 var listenerThread = new Thread(() => listener.StartListener());
 listenerThread.Start();
 Console.WriteLine("Started Listener on port 6001");
@@ -56,8 +56,7 @@ foreach (var localIp in host.AddressList)
     }
 }
 
-//EndPoints
-var reciever = new IPEndPoint(IPAddress.Parse(recieverIp), recieverPort);
+//EndPoint
 var NodeEndPoint = new IPEndPoint(IPAddress.Parse(nodeIp), 6001);
 
 //Node & serialization
