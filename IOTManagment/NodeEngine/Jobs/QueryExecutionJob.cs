@@ -30,7 +30,7 @@ namespace NodeEngine.Jobs
             
             if(whereStatement != null && handler.CheckWhereStatement(whereStatement))
             {
-                IPEndPoint endPoint = new IPEndPoint(long.Parse(dataMap.GetString("IP")), int.Parse(dataMap.GetString("Port")));
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(dataMap.GetString("IP")), int.Parse(dataMap.GetString("Port")));
                 Log.Logger.Information("Job-Query has been evaluated returning true");
 
                 // Select The data specified and send it to parent  //TODO : make payload with data

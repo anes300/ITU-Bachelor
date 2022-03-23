@@ -132,8 +132,7 @@ namespace NodeEngine.Services
                     {
                         result = double.Parse(data);
                     }
-
-                result = double.Parse(data);
+                
                 return result;
             }
 
