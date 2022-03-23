@@ -31,8 +31,6 @@ Quartz.Logging.LogContext.SetCurrentLogProvider(logFactory);
 QueryScheduler scheduler = new QueryScheduler();
 Console.WriteLine("Query Engine Started");
 
-var query2 = parser.ParserQuery(test2);
-
 // Setup Receiver for CONNECT Message
 Console.WriteLine("Enter Connection ip");
 var recieverIp = Console.ReadLine();
