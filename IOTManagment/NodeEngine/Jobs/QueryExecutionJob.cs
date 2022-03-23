@@ -17,16 +17,18 @@ namespace NodeEngine.Jobs
 
         public async Task Execute(IJobExecutionContext context)
         {
-           
+            SensorManager sensorManager = new SensorManager();
+            QueryHandler handler = new QueryHandler(sensorManager);
+
             JobDataMap dataMap = context.JobDetail.JobDataMap;
             SelectStatement? selectStatement = JsonSerializer.Deserialize<SelectStatement>(dataMap.GetString("Select"));
             WhereStatement? whereStatement = JsonSerializer.Deserialize<WhereStatement>(dataMap.GetString("Where"));
-
-
-
-           // var i = queryHandler.CheckWhereStatement(whereStatement);
-            Log.Logger.Information("Log Something");
-            await Console.Error.WriteLineAsync("Select variable: " + selectStatement.Variables[0].Variable);
+            
+            if(whereStatement != null && handler.CheckWhereStatement(whereStatement))
+            {
+                Log.Logger.Information("Job-Query has been evaluated returning true");
+                // Select The data specified and send it to parent
+            }
         }
     }
 }
