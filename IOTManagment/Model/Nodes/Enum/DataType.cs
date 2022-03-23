@@ -10,7 +10,5 @@ namespace Model.Nodes.Enum
     {
         TEMPERATURE_CPU = 1,
         TEMPERATURE_GPU = 2,
-        TEMPERATURE_BOTH = 3,
-
     }
 }
