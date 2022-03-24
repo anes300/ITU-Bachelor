@@ -30,13 +30,13 @@ namespace NodeEngine.Jobs
             
             if(whereStatement != null && handler.CheckWhereStatement(whereStatement))
             {
-                IPEndPoint endPoint = new IPEndPoint(long.Parse(dataMap.GetString("IP")), int.Parse(dataMap.GetString("Port")));
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(dataMap.GetString("IP")), int.Parse(dataMap.GetString("Port")));
                 Log.Logger.Information("Job-Query has been evaluated returning true");
 
                 // Select The data specified and send it to parent  //TODO : make payload with data
-                string payload = "";  
+                string payload = JsonSerializer.Serialize(handler.GetSelectResults(selectStatement));  
 
-                var msg = new Model.Messages.Message(payload, MessageType.RESPONSEAPI,null,-1);              
+                var msg = new Model.Messages.Message(payload, MessageType.RESPONSEAPI,null,-1);   // TODO: add local ip and port           
                 var sender = new NetworkSender(endPoint, JsonSerializer.Serialize(msg));
                 var senderThread = new Thread(() => sender.SendMessage());
                 senderThread.Start();

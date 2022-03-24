@@ -1,4 +1,5 @@
-﻿using Model.Queries.Statements;
+﻿using Model.Messages;
+using Model.Queries.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,9 @@ namespace NodeEngine.Services
 {
     public interface IQueryHandler
     {
-        public bool CheckWhereStatement(WhereStatement statement); 
+        public bool CheckWhereStatement(WhereStatement statement);
+        
+        public List<SelectVariableResult>GetSelectResults(SelectStatement statement);
  
     }
 }
