@@ -123,8 +123,8 @@ namespace NodeEngine.Services
 
                 if (dataType == DataType.TEMPERATURE_GPU)
                     {
-                        data.Replace("temp=", "");
-                        data.Replace("''C", "");
+                        data = data.Replace("temp=", "");
+                        data = data.Replace("'C", "");
                         result = double.Parse(data);
                     }
 

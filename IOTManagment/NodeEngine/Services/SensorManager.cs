@@ -20,7 +20,7 @@ namespace NodeEngine.Services
                 case DataType.TEMPERATURE_CPU:
                     return ExecuteCommand("cat /sys/class/thermal/thermal_zone0/temp");
                 case DataType.TEMPERATURE_GPU:
-                    return ExecuteCommand("/opt/vc/bin/vcgencmd measure_temp");
+                    return ExecuteCommand("vcgencmd measure_temp");
                 case DataType.TEST_VAR:
                     Random rnd = new Random();
                     return (rnd.NextDouble() * (80 - 0) + 0).ToString();

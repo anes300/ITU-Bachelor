@@ -4,6 +4,7 @@ using System.Text.Json;
 using Model.Messages;
 using Model.Queries;
 using NodeEngine.Services;
+using Serilog;
 
 namespace NodeEngine.Networking
 {
@@ -75,7 +76,7 @@ namespace NodeEngine.Networking
                         }
 					default:
 						// TODO: Handle if no type is given
-						Console.WriteLine("No msgType" + msg);
+						Log.Warning("No msgType: " + message);
 						break;
 				}
 			}
