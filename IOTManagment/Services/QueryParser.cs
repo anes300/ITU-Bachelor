@@ -31,7 +31,6 @@ namespace Services
          
             return new Query
             {
-                Id = Guid.NewGuid(),
                 SelectStatement = selectStatement,
                 IntervalStatement = intervalStatement,
                 WhereStatement = whereStatemennt

@@ -30,5 +30,13 @@ namespace Services
         {
             return IPAdresses;
         }
+
+        public INode GetNodeByIP(IPEndPoint ip) {
+            if (!IPAdresses.ContainsKey(ip))
+            {
+                return null;
+            }
+            return IPAdresses[ip];
+        }
     }
 }

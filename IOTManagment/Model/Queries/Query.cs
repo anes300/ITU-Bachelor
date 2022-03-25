@@ -9,7 +9,7 @@ namespace Model.Queries
 {
     public class Query
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; } = Guid.NewGuid();
         public SelectStatement SelectStatement { get; set; }
         public IntervalStatement IntervalStatement { get; set; }
         public WhereStatement? WhereStatement { get; set; }
