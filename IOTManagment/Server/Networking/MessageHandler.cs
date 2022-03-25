@@ -37,7 +37,7 @@ namespace Server.Networking
 							var NodeEndPoint = new IPEndPoint(IPAddress.Parse(node.Address), node.AddressPort);
 							if (nodeChildren.Any(x => x.Address.Equals(IPAddress.Parse(msg.senderIP))))
                             {
-								Console.WriteLine("Node already exists.");
+								Console.WriteLine($"Node {msg.senderIP} reconnected.");
 								break;
                             } 
 							_topologyManager.AddNode(NodeEndPoint, node);
