@@ -73,6 +73,28 @@ namespace NodeEngine.Networking
 							}
 							break;
                         }
+					case MessageType.STOP:
+                        {
+							Console.WriteLine($"MessageType: STOP QUERY {msg.messageBody}");
+							
+							try
+							{
+								var id = JsonSerializer.Deserialize<Guid>(msg.messageBody);
+								await scheduler.RemoveQueryjobAsync(id);
+
+								foreach (IPEndPoint child in nodeChildren)
+								{
+									var sender = new NetworkSender(child, message);
+									sender.SendMessage();
+								}
+							}
+							catch (Exception e)
+							{
+								Console.WriteLine($"Could not parse {msg.messageBody} as GUID");
+								Console.WriteLine(e);
+							}
+							break;
+                        }
 					default:
 						// TODO: Handle if no type is given
 						Console.WriteLine("No msgType" + msg);

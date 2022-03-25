@@ -5,8 +5,8 @@ using System.Net;
 namespace Model.Messages
 {
     public class Message 
-    {  
-        public Guid messageId { get; }
+    {
+        public Guid messageId { get; set; } = Guid.NewGuid();
         public string messageBody { get; } // = PayloadBody
         public MessageType messageType { get; }
         public string senderIP { get; }
@@ -14,7 +14,6 @@ namespace Model.Messages
 
         public Message(string messageBody, MessageType messageType, string senderIP,int senderPort)
         {  
-            this.messageId = Guid.NewGuid();
             this.messageBody = messageBody;
             this.messageType = messageType;
             this.senderIP = senderIP;
@@ -28,5 +27,6 @@ namespace Model.Messages
         FORWARD=2,
         RESPONSEAPI=3,
         QUERY = 4,
+        STOP = 5,
     };
 }

@@ -83,6 +83,20 @@ namespace Server.Networking
             }
         }
 
+		public void SendStop(Guid id)
+        {
+			string body = JsonSerializer.Serialize(id);
+			Message msg = new Message(body, MessageType.STOP, localIp.Address.ToString(), localIp.Port);
+			// Serialize message
+			var sendMsg = JsonSerializer.Serialize(msg);
+
+			foreach (IPEndPoint child in nodeChildren)
+			{
+				var sender = new NetworkSender(child, sendMsg);
+				sender.SendMessage();
+			}
+		}
+
 		public void SendQuery(Query query)
         {
 			string body = JsonSerializer.Serialize(query);

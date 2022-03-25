@@ -107,7 +107,8 @@ while (true)
                                 {
                                     Console.Clear();
                                     queries.Remove(foundQ);
-                                    colorConsole("Query removed", ConsoleColor.Yellow, ConsoleColor.Black);
+                                    colorConsole($"Query removed {id}", ConsoleColor.Yellow, ConsoleColor.Black);
+                                    messageHandler.SendStop(id);
                                     break;
                                 }
                                 else { colorConsole("No such Query found", ConsoleColor.Red, ConsoleColor.White); Console.WriteLine("Please re-enter query id or write quit"); }
@@ -115,7 +116,7 @@ while (true)
                         }
                         break;
                     case "-help":
-                        printCommands(1);
+                        Console.Clear();
                             break;
                     case "back":
                         Console.Clear();
