@@ -70,6 +70,10 @@ while (true)
                                     Console.WriteLine("Re-enter query or write quit");
                                 }
                             }
+                            else
+                            {
+                                Console.WriteLine("Re-enter Query or write quit");
+                            }
                         }
                         break;
                     case "info": //TODO: Create list of all queries
@@ -94,16 +98,16 @@ while (true)
                         break;
                     case "stop": //TODO: send a stop message and remove query from list
                         Console.WriteLine("Input query id");
-                        Guid id = default;             
+                        Guid id = default;
                         while (true)
                         {
                             string value = Console.ReadLine().Trim();
                             if (value == "quit") { Console.Clear(); break; }
-                            if(value != "")
-                            { 
+                            if (value != "")
+                            {
                                 Guid.TryParse(value, out id);
                                 var foundQ = queries.Where(x => x.Id == id).FirstOrDefault();
-                                if(foundQ != null)
+                                if (foundQ != null)
                                 {
                                     Console.Clear();
                                     queries.Remove(foundQ);
@@ -112,6 +116,10 @@ while (true)
                                     break;
                                 }
                                 else { colorConsole("No such Query found", ConsoleColor.Red, ConsoleColor.White); Console.WriteLine("Please re-enter query id or write quit"); }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Re-enter query id or write quit");
                             }
                         }
                         break;
