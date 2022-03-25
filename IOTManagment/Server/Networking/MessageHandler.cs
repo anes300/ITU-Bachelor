@@ -37,7 +37,7 @@ namespace Server.Networking
 							var NodeEndPoint = new IPEndPoint(IPAddress.Parse(node.Address), node.AddressPort);
 							if (nodeChildren.Any(x => x.Address.Equals(IPAddress.Parse(msg.senderIP))))
                             {
-								Console.WriteLine("Node already exists.");
+								Console.WriteLine($"Node {msg.senderIP} reconnected.");
 								break;
                             } 
 							_topologyManager.AddNode(NodeEndPoint, node);
@@ -82,6 +82,20 @@ namespace Server.Networking
 				Console.WriteLine($"Could not deserialize. Message: {message}");
             }
         }
+
+		public void SendStop(Guid id)
+        {
+			string body = JsonSerializer.Serialize(id);
+			Message msg = new Message(body, MessageType.STOP, localIp.Address.ToString(), localIp.Port);
+			// Serialize message
+			var sendMsg = JsonSerializer.Serialize(msg);
+
+			foreach (IPEndPoint child in nodeChildren)
+			{
+				var sender = new NetworkSender(child, sendMsg);
+				sender.SendMessage();
+			}
+		}
 
 		public void SendQuery(Query query)
         {
