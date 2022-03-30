@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Quartz.Impl;
+﻿using Quartz.Impl;
 using Quartz;
 using Model.Queries;
 using NodeEngine.Jobs;
@@ -14,18 +9,15 @@ namespace NodeEngine.Services
 {
     public class QueryScheduler : IDisposable
     {
-
         IScheduler scheduler;
        
         public QueryScheduler()
         {
-         
-            // using defaults
+            // Using defaults
             StdSchedulerFactory factory = new StdSchedulerFactory();
             
             scheduler = factory.GetScheduler().Result; 
             scheduler.Start().Wait();
-           
         }
 
         public async Task AddQueryJobAsync(Query query, IPEndPoint parent)
@@ -36,7 +28,7 @@ namespace NodeEngine.Services
 
             string whereStatement = JsonSerializer.Serialize(query.WhereStatement);
 
-            // create the job and inputs the query data into the jobs datamap as String
+            // Create the job and inputs the query data into the jobs datamap as String
             IJobDetail job = JobBuilder.Create<QueryExecutionJob>()
                 .WithIdentity($"Job-{query.Id}", "Queries")
                 .UsingJobData("Select", selectStatement)
@@ -56,7 +48,6 @@ namespace NodeEngine.Services
             
             // Schedule the job using The created trigger
             await scheduler.ScheduleJob(job, trigger);
-
         }
 
         // Remove a job from the schedule
@@ -67,10 +58,7 @@ namespace NodeEngine.Services
 
         public void Dispose()
         {
-            scheduler.Shutdown();
-                
+            scheduler.Shutdown();       
         }
-
-        
     }
 }

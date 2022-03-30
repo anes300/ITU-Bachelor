@@ -1,17 +1,10 @@
 ﻿using Model.Nodes.Enum;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NodeEngine.Services
 {
     public class SensorManager : ISensorManager
     {
-        
-        // TODO: Add commands for more datatypes
         public string GetSensorData(DataType type)
         {
 
@@ -26,16 +19,14 @@ namespace NodeEngine.Services
                     return (rnd.NextDouble() * (80 - 0) + 0).ToString();
                 default:
                     return null;
-                   
             }
-    
         }
 
         // IMPORTANT: Commands will only work when running on linux system
         private string ExecuteCommand(string command)
         {         
             string result = "";
-            using (System.Diagnostics.Process proc = new System.Diagnostics.Process())
+            using (Process proc = new System.Diagnostics.Process())
             {
                 proc.StartInfo.FileName = "/bin/bash";
                 proc.StartInfo.Arguments = "-c \" " + command + " \"";
@@ -52,7 +43,4 @@ namespace NodeEngine.Services
             return result;
         }
     }
-
-
-
 }

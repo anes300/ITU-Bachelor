@@ -1,19 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using NodeEngine.Services;
-using Services;
 using System.Net;
 using System.Text.Json;
-using NodeEngine.Jobs;
-using Model.Queries;
-using Model.Queries.Statements;
 using Serilog;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
 using NodeEngine.Networking;
 using Model.Messages;
 using System.Net.Sockets;
 using Model.Nodes;
 using Model.Nodes.Enum;
+using NodeEngine.Utils;
 
 // Setup logger
 var log = new LoggerConfiguration()
@@ -29,7 +24,7 @@ var logFactory = new LoggerFactory()
 Quartz.Logging.LogContext.SetCurrentLogProvider(logFactory);
 
 // Setup Receiver for CONNECT Message
-Console.WriteLine("Enter Connection ip");
+Console.WriteLine("Enter Connection IP");
 var recieverIp = Console.ReadLine();
 Console.WriteLine("Enter Connection Port");
 int recieverPort = int.Parse(Console.ReadLine());
@@ -44,17 +39,8 @@ listenerThread.Start();
 Console.WriteLine("Started Listener on port 6001");
 
 // Get Local IP Address
-string nodeIp = default;
-
-var host = Dns.GetHostEntry(Dns.GetHostName());
-foreach (var localIp in host.AddressList)
-{
-    if (localIp.AddressFamily == AddressFamily.InterNetwork && localIp.ToString() != "127.0.0.1")
-    {
-        nodeIp = localIp.ToString();
-        Console.WriteLine("IP Address of this node = " + nodeIp);
-    }
-}
+string nodeIp = IpUtils.GetLocalIp();
+Console.WriteLine($"IP Address of this Node: {nodeIp}");
 
 //EndPoint
 var NodeEndPoint = new IPEndPoint(IPAddress.Parse(nodeIp), 6001);
