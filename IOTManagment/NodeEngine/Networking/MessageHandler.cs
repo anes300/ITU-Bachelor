@@ -40,6 +40,7 @@ namespace NodeEngine.Networking
 							}
 							nodeChildren.Add(node);
 
+							Console.WriteLine("Sending Topology message");
 
 							//Send new message with info about new node to topology manager in server.
 							var connectionMsg = new Message(msg.messageBody, MessageType.TOPOLOGY, msg.senderIP, msg.senderPort);
@@ -71,7 +72,6 @@ namespace NodeEngine.Networking
 					case MessageType.STOP:
                         {
 							Console.WriteLine($"MessageType: STOP QUERY {msg.messageBody}");
-							
 							try
 							{
 								var id = JsonSerializer.Deserialize<Guid>(msg.messageBody);

@@ -44,7 +44,7 @@ MessageHandler handler = new MessageHandler(reciever);
 var listener = new NetworkListener(handler);
 var listenerThread = new Thread(() => listener.StartListener(port));
 listenerThread.Start();
-Console.WriteLine("Started Listener on port 6001");
+Console.WriteLine($"Started Listener on port {port}");
 
 // Get Local IP Address
 string nodeIp = default;
