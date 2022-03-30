@@ -27,7 +27,10 @@ namespace NodeEngine.Networking
 			sender.SendFrame(message);
 
 			Console.WriteLine("Message sent. Closing thread.");
-			
+			while (sender.HasOut) { }
+
+			sender.Dispose();
+
 		}
 	}
 }
