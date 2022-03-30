@@ -41,23 +41,11 @@ namespace NodeEngine.Networking
 							nodeChildren.Add(node);
 							break;
 						}
-					case MessageType.FORWARD:
-						{
-							Console.WriteLine("MessageType: FOWARD");
-							
-							foreach (IPEndPoint child in nodeChildren)
-							{
-								var sender = new NetworkSender(child, message);
-								sender.SendMessage();
-							}
-
-							//TODO: Do something to Query
-
-							break;
-						}
 					case MessageType.RESPONSEAPI:
 						{
 							Console.WriteLine("MessageType: RESPONSEAPI");
+							var sender = new NetworkSender(parentEndPoint, message);
+							sender.SendMessage();
 							break;
 						}
 					case MessageType.QUERY:
