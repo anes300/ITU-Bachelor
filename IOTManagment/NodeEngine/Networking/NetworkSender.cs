@@ -8,13 +8,13 @@ namespace NodeEngine.Networking
 {
 	public class NetworkSender
 	{
-		IPEndPoint Receiver;
-		string Message;
+		IPEndPoint receiver;
+		string message;
 
 		public NetworkSender(IPEndPoint receiver, string message)
 		{
-			this.Receiver = receiver;
-			this.Message = message;
+			this.receiver = receiver;
+			this.message = message;
 		}
 
 		public void SendMessage()
@@ -22,11 +22,13 @@ namespace NodeEngine.Networking
 			var sender = new PushSocket();
 			
 			Console.WriteLine("Connecting to socket...");
-			sender.Connect($"tcp://{Receiver.Address}:{Receiver.Port}");
-
-			sender.SendFrame(Message);
+			sender.Connect($"tcp://{receiver.Address}:{receiver.Port}");
+			sender.SendFrame(message);
 
 			Console.WriteLine("Message sent. Closing thread.");
+            while (sender.HasOut) { }
+			
+			sender.Dispose();
 			
 		}
 	}
