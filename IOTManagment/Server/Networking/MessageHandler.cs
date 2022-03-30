@@ -71,6 +71,14 @@ namespace Server.Networking
                             }
 							break;
 						}
+					case MessageType.TOPOLOGY:
+						{
+							Console.WriteLine("MessageType: TOPOLOGY");
+							var node = JsonSerializer.Deserialize<Node>(msg.messageBody);
+							var NodeEndPoint = new IPEndPoint(IPAddress.Parse(node.Address), node.AddressPort);
+							_topologyManager.AddNode(NodeEndPoint, node);
+							break;
+						}
 					default:
 						// TODO: Handle if no type is given
 						Console.WriteLine("No msgType" + msg);
