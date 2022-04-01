@@ -33,21 +33,23 @@ var recieverIp = Console.ReadLine();
 Console.WriteLine("Enter Receiver Connection Port");
 int recieverPort = int.Parse(Console.ReadLine());
 
-var reciever = new IPEndPoint(IPAddress.Parse(recieverIp), recieverPort);
-MessageHandler handler = new MessageHandler(reciever);
+// Get Local IP Address
+string nodeIp = IpUtils.GetLocalIp();
+Console.WriteLine($"IP Address of this Node: {nodeIp}");
 
+var reciever = new IPEndPoint(IPAddress.Parse(recieverIp), recieverPort);
+var NodeEndPoint = new IPEndPoint(IPAddress.Parse(nodeIp), port);
+
+MessageHandler handler = new MessageHandler(reciever,NodeEndPoint);
 // Listener (OBS: LISTNER SHOULD RUN FIRST - CAN'T SEND WITHOUT LISTENER)
 var listener = new NetworkListener(handler);
 var listenerThread = new Thread(() => listener.StartListener(port));
 listenerThread.Start();
 Console.WriteLine($"Started Listener on port {port}");
 
-// Get Local IP Address
-string nodeIp = IpUtils.GetLocalIp();
-Console.WriteLine($"IP Address of this Node: {nodeIp}");
 
-//EndPoint
-var NodeEndPoint = new IPEndPoint(IPAddress.Parse(nodeIp), port);
+
+
 
 //Node & serialization
 var node = new Node
