@@ -20,7 +20,7 @@ namespace NodeEngine.Services
             scheduler.Start().Wait();
         }
 
-        public async Task AddQueryJobAsync(Query query, IPEndPoint parent)
+        public async Task AddQueryJobAsync(Query query, IPEndPoint parent, IPEndPoint nodeEndPoint)
         {
             int interval = query.IntervalStatement.Interval;
 
@@ -35,6 +35,8 @@ namespace NodeEngine.Services
                 .UsingJobData("Where", whereStatement)
                 .UsingJobData("IP",parent.Address.ToString())
                 .UsingJobData("Port",parent.Port.ToString())
+                .UsingJobData("IP-Own", nodeEndPoint.Address.ToString())
+                .UsingJobData("Port-Own", nodeEndPoint.Port.ToString())
                 .Build();
             
             // Create the jobs trigger with the interval specified in the given query
