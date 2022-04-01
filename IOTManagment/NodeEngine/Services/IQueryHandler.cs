@@ -1,10 +1,5 @@
 ﻿using Model.Messages;
 using Model.Queries.Statements;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NodeEngine.Services
 {
@@ -13,6 +8,5 @@ namespace NodeEngine.Services
         public bool CheckWhereStatement(WhereStatement statement);
         
         public List<SelectVariableResult>GetSelectResults(SelectStatement statement);
- 
     }
 }

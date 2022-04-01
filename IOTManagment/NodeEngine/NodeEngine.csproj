@@ -24,6 +24,8 @@
     <None Remove="Newtonsoft.Json" />
     <None Remove="NetMQ" />
     <None Remove="Networking\" />
+    <None Remove="Properties\PublishProfiles\" />
+    <None Remove="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -31,5 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Networking\" />
+    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 </Project>
