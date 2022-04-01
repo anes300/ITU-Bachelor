@@ -29,9 +29,9 @@ namespace NodeEngine.Jobs
                 // Select The data specified and send it to parent
                 string payload = JsonSerializer.Serialize(handler.GetSelectResults(selectStatement));  
 
-                var msg = new Message(payload, MessageType.RESPONSEAPI, dataMap.GetString("IP-Own"), int.Parse(dataMap.GetString("Port-Own")));        
-                var sender = new NetworkSender(endPoint, JsonSerializer.Serialize(msg));
-                var senderThread = new Thread(() => sender.SendMessage());
+                var msg = new Message(payload, MessageType.RESPONSEAPI, dataMap.GetString("IP-Own"), int.Parse(dataMap.GetString("Port-Own")));           
+                var sender = new NetworkSender();
+                var senderThread = new Thread(() => sender.SendMessage(endPoint, JsonSerializer.Serialize(msg)));
                 senderThread.Start();
             }
         }
