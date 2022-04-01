@@ -8,19 +8,22 @@ namespace NodeEngine.Networking
 {
 	public class NetworkSender
 	{
-		IPEndPoint receiver;
-		string message;
-
-		public NetworkSender(IPEndPoint receiver, string message)
+		PushSocket sender;
+		IPEndPoint oldReceiver = default;
+		public NetworkSender()
 		{
-			this.receiver = receiver;
-			this.message = message;
+			sender = new PushSocket();
 		}
 
-		public void SendMessage()
+		public void SendMessage(IPEndPoint receiver, string message)
 		{
-			var sender = new PushSocket();
-			
+			if (oldReceiver != default)
+            {
+			sender.Disconnect($"tcp://{oldReceiver}");
+
+			}
+
+			oldReceiver = receiver;
 			Console.WriteLine("Connecting to socket...");
 			sender.Connect($"tcp://{receiver.Address}:{receiver.Port}");
 

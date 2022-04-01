@@ -37,8 +37,8 @@ namespace NodeEngine.Jobs
                 string payload = JsonSerializer.Serialize(handler.GetSelectResults(selectStatement));  
 
                 var msg = new Model.Messages.Message(payload, MessageType.RESPONSEAPI,null,-1);   // TODO: add local ip and port           
-                var sender = new NetworkSender(endPoint, JsonSerializer.Serialize(msg));
-                var senderThread = new Thread(() => sender.SendMessage());
+                var sender = new NetworkSender();
+                var senderThread = new Thread(() => sender.SendMessage(endPoint, JsonSerializer.Serialize(msg)));
                 senderThread.Start();
             }
         }

@@ -13,11 +13,13 @@ namespace NodeEngine.Networking
 		List<IPEndPoint> nodeChildren;
 		QueryScheduler scheduler;
 		IPEndPoint parentEndPoint;
+		NetworkSender sender;
 		public MessageHandler(IPEndPoint parent)
 		{
 			nodeChildren = new List<IPEndPoint>();
 			scheduler = new QueryScheduler();
 			parentEndPoint = parent;
+			sender = new NetworkSender();
 		}
 
 		public async void HandleMessage(string message)
@@ -44,15 +46,14 @@ namespace NodeEngine.Networking
 
 							//Send new message with info about new node to topology manager in server.
 							var connectionMsg = new Message(msg.messageBody, MessageType.TOPOLOGY, msg.senderIP, msg.senderPort);
-							var sender = new NetworkSender(parentEndPoint, JsonSerializer.Serialize(connectionMsg));
-							sender.SendMessage();
+							
+							sender.SendMessage(parentEndPoint, JsonSerializer.Serialize(connectionMsg));
 							break;
 						}
 					case MessageType.RESPONSEAPI:
 						{
 							Console.WriteLine("MessageType: RESPONSEAPI");
-							var sender = new NetworkSender(parentEndPoint, message);
-							sender.SendMessage();
+							sender.SendMessage(parentEndPoint, message);
 							break;
 						}
 					case MessageType.QUERY:
@@ -64,8 +65,7 @@ namespace NodeEngine.Networking
 							await scheduler.AddQueryJobAsync(q,parentEndPoint);
 							foreach (IPEndPoint child in nodeChildren)
 							{
-								var sender = new NetworkSender(child, message);
-								sender.SendMessage();
+								sender.SendMessage(child, message);
 							}
 							break;
                         }
@@ -78,9 +78,8 @@ namespace NodeEngine.Networking
 								await scheduler.RemoveQueryjobAsync(id);
 
 								foreach (IPEndPoint child in nodeChildren)
-								{
-									var sender = new NetworkSender(child, message);
-									sender.SendMessage();
+								{ 
+									sender.SendMessage(child, message);
 								}
 							}
 							catch (Exception e)
@@ -93,8 +92,7 @@ namespace NodeEngine.Networking
 					case MessageType.TOPOLOGY:
 						{
 							Console.WriteLine("MessageType: TOPOLOGY");
-							var sender = new NetworkSender(parentEndPoint, message);
-							sender.SendMessage();
+							sender.SendMessage(parentEndPoint, message);
 							break;
 						}
 					default:
