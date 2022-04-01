@@ -1,0 +1,6 @@
+site_name: IoT Data Management
+site_url: https://example.com/
+nav:
+    - Home: index.md
+    - NodeEngine: nodeengine.md
+    - Server: server.md
