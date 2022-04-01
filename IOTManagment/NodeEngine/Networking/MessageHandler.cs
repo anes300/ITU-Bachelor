@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using Model.Messages;
 using Model.Queries;
@@ -14,10 +13,12 @@ namespace NodeEngine.Networking
 		QueryScheduler scheduler;
 		IPEndPoint parentEndPoint;
 		NetworkSender sender;
-		public MessageHandler(IPEndPoint parent)
+		IPEndPoint nodeEndPoint;
+		public MessageHandler(IPEndPoint parent, IPEndPoint endPoint)
 		{
 			nodeChildren = new List<IPEndPoint>();
 			scheduler = new QueryScheduler();
+			nodeEndPoint = endPoint;
 			parentEndPoint = parent;
 			sender = new NetworkSender();
 		}
@@ -62,7 +63,7 @@ namespace NodeEngine.Networking
 							Query q = JsonSerializer.Deserialize<Query>(msg.messageBody);
 							if (q == null) throw new Exception("Query is null");
 
-							await scheduler.AddQueryJobAsync(q,parentEndPoint);
+							await scheduler.AddQueryJobAsync(q,parentEndPoint,nodeEndPoint);
 							foreach (IPEndPoint child in nodeChildren)
 							{
 								sender.SendMessage(child, message);
