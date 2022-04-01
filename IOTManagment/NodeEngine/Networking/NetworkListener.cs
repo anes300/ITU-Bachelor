@@ -13,12 +13,12 @@ namespace NodeEngine.Networking
             messageHandler = handler;
         }
 
-        public void StartListener()
+        public void StartListener(int port)
         {
             using (var listener = new PullSocket())
             {
-                Console.WriteLine("Started Listening on port 6001...");
-                listener.Bind("tcp://0.0.0.0:6001");
+                Console.WriteLine($"Started Listening on port {port}...");
+                listener.Bind($"tcp://0.0.0.0:{port}");
 
                 while (true)
                 {

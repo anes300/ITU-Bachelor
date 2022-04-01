@@ -23,10 +23,14 @@ var logFactory = new LoggerFactory()
 // sets the logger for the Scheduler 
 Quartz.Logging.LogContext.SetCurrentLogProvider(logFactory);
 
+Console.WriteLine("Enter Nodes port");
+int port = int.Parse(Console.ReadLine());
+
 // Setup Receiver for CONNECT Message
-Console.WriteLine("Enter Connection IP");
+Console.WriteLine("Enter Receiver Connection ip");
+
 var recieverIp = Console.ReadLine();
-Console.WriteLine("Enter Connection Port");
+Console.WriteLine("Enter Receiver Connection Port");
 int recieverPort = int.Parse(Console.ReadLine());
 
 var reciever = new IPEndPoint(IPAddress.Parse(recieverIp), recieverPort);
@@ -34,16 +38,16 @@ MessageHandler handler = new MessageHandler(reciever);
 
 // Listener (OBS: LISTNER SHOULD RUN FIRST - CAN'T SEND WITHOUT LISTENER)
 var listener = new NetworkListener(handler);
-var listenerThread = new Thread(() => listener.StartListener());
+var listenerThread = new Thread(() => listener.StartListener(port));
 listenerThread.Start();
-Console.WriteLine("Started Listener on port 6001");
+Console.WriteLine($"Started Listener on port {port}");
 
 // Get Local IP Address
 string nodeIp = IpUtils.GetLocalIp();
 Console.WriteLine($"IP Address of this Node: {nodeIp}");
 
 //EndPoint
-var NodeEndPoint = new IPEndPoint(IPAddress.Parse(nodeIp), 6001);
+var NodeEndPoint = new IPEndPoint(IPAddress.Parse(nodeIp), port);
 
 //Node & serialization
 var node = new Node
@@ -51,7 +55,7 @@ var node = new Node
     Parent = recieverIp,
     ParentPort = recieverPort,
     Address = nodeIp,
-    AddressPort = 6001,
+    AddressPort = port,
     Type = NodeType.NODE,
     Status = Status.ACTIVE,
     DataType = DataType.TEMPERATURE_CPU,
@@ -59,8 +63,8 @@ var node = new Node
 
 var jsonNode = JsonSerializer.Serialize(node);
 
-// Sender-connect message to server.
-var msg = new Message(jsonNode, MessageType.CONNECT, nodeIp, 6001);
+// Sender-connect message to server/parent.
+var msg = new Message(jsonNode, MessageType.CONNECT, nodeIp, port);
 var json = JsonSerializer.Serialize(msg);
 var sender = new NetworkSender(reciever, json);
 var senderThread = new Thread(() => sender.SendMessage());
