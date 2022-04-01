@@ -39,6 +39,13 @@ namespace NodeEngine.Networking
 								break;
 							}
 							nodeChildren.Add(node);
+
+							Console.WriteLine("Sending Topology message");
+
+							//Send new message with info about new node to topology manager in server.
+							var connectionMsg = new Message(msg.messageBody, MessageType.TOPOLOGY, msg.senderIP, msg.senderPort);
+							var sender = new NetworkSender(parentEndPoint, JsonSerializer.Serialize(connectionMsg));
+							sender.SendMessage();
 							break;
 						}
 					case MessageType.RESPONSEAPI:
@@ -65,7 +72,6 @@ namespace NodeEngine.Networking
 					case MessageType.STOP:
                         {
 							Console.WriteLine($"MessageType: STOP QUERY {msg.messageBody}");
-							
 							try
 							{
 								var id = JsonSerializer.Deserialize<Guid>(msg.messageBody);
@@ -84,6 +90,13 @@ namespace NodeEngine.Networking
 							}
 							break;
                         }
+					case MessageType.TOPOLOGY:
+						{
+							Console.WriteLine("MessageType: TOPOLOGY");
+							var sender = new NetworkSender(parentEndPoint, message);
+							sender.SendMessage();
+							break;
+						}
 					default:
 						// TODO: Handle if no type is given
 						Log.Warning("No msgType: " + message);

@@ -28,5 +28,6 @@ namespace Model.Messages
         RESPONSEAPI=3,
         QUERY = 4,
         STOP = 5,
+        TOPOLOGY =6,
     };
 }

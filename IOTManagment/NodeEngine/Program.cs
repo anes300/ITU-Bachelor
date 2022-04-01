@@ -44,7 +44,7 @@ MessageHandler handler = new MessageHandler(reciever);
 var listener = new NetworkListener(handler);
 var listenerThread = new Thread(() => listener.StartListener(port));
 listenerThread.Start();
-Console.WriteLine("Started Listener on port 6001");
+Console.WriteLine($"Started Listener on port {port}");
 
 // Get Local IP Address
 string nodeIp = default;
@@ -76,7 +76,7 @@ var node = new Node
 
 var jsonNode = JsonSerializer.Serialize(node);
 
-// Sender-connect message to server.
+// Sender-connect message to server/parent.
 var msg = new Message(jsonNode, MessageType.CONNECT, nodeIp, port);
 var json = JsonSerializer.Serialize(msg);
 var sender = new NetworkSender(reciever, json);
