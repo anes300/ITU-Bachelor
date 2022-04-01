@@ -76,7 +76,7 @@ var node = new Node
 
 var jsonNode = JsonSerializer.Serialize(node);
 
-// Sender-connect message to server.
+// Sender-connect message to server/parent.
 var msg = new Message(jsonNode, MessageType.CONNECT, nodeIp, port);
 var json = JsonSerializer.Serialize(msg);
 var sender = new NetworkSender(reciever, json);
