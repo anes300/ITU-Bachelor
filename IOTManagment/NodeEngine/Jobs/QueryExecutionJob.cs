@@ -31,8 +31,9 @@ namespace NodeEngine.Jobs
 
                 var msg = new Message(payload, MessageType.RESPONSEAPI, dataMap.GetString("IP-Own"), int.Parse(dataMap.GetString("Port-Own")));           
                 var sender = new NetworkSender();
-                var senderThread = new Thread(() => sender.SendMessage(endPoint, JsonSerializer.Serialize(msg)));
-                senderThread.Start();
+                //var senderThread = new Thread(() => sender.SendMessage(endPoint, JsonSerializer.Serialize(msg)));
+                //senderThread.Start();
+                sender.SendMessage(endPoint, JsonSerializer.Serialize(msg));
             }
         }
     }

@@ -17,6 +17,7 @@ namespace NodeEngine.Networking
 
 		public void SendMessage(IPEndPoint receiver, string message)
 		{
+           
 			if (oldReceiver != default)
             {
 			sender.Disconnect($"tcp://{oldReceiver}");
@@ -28,8 +29,12 @@ namespace NodeEngine.Networking
 			sender.Connect($"tcp://{receiver.Address}:{receiver.Port}");
 
 			sender.SendFrame(message);
-
+			
 			Console.WriteLine("Message sent. Closing thread.");
+
+			
+			
+
 		}
 	}
 }

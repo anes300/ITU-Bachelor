@@ -17,12 +17,14 @@ namespace Server.Networking
         {
             using (var listener = new PullSocket())
             {
+                int count = 1;
                 listener.Bind("tcp://0.0.0.0:6000");
                 while (true)
                 {
                     // Listen for messsages
                     string msg = listener.ReceiveFrameString();
-                    Console.WriteLine("Received frame: {0}", msg);
+                    count++;
+                    Console.WriteLine($"Messages received: {count++}");
 
 
                     // Handle the Message
